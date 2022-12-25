@@ -51,7 +51,7 @@ ChangeRingFrame:
 OscillateNumInit:
 		lea	Osc_Data(pc),a2
 		lea	(Oscillating_Numbers).w,a1
-		moveq	#bytesToWcnt(Osc_Data_End-Osc_Data),d1
+		moveq	#bytesToWcnt(Osc_Data_end-Osc_Data),d1
 
 .copy
 		move.w	(a2)+,(a1)+
@@ -77,7 +77,7 @@ Osc_Data:
 		dc.w $7080,$276
 		dc.w $80, 0
 		dc.w $4000, $FE
-Osc_Data_End
+Osc_Data_end
 
 ; =============== S U B R O U T I N E =======================================
 
@@ -89,7 +89,7 @@ OscillateNumDo:
 		lea	Osc_Data2(pc),a2
 		lea	(Oscillating_Numbers).w,a1
 		move.w	(a1)+,d3								; get oscillation direction bitfield
-		moveq	#bytesToLcnt(Osc_Data2_End-Osc_Data2),d1
+		moveq	#bytesToLcnt(Osc_Data2_end-Osc_Data2),d1
 
 -		move.w	(a2)+,d2								; get frequency
 		move.w	(a2)+,d4								; get amplitude
@@ -135,4 +135,4 @@ Osc_Data2:
 		dc.w	 7, $70
 		dc.w	 2, $40
 		dc.w	 2, $40
-Osc_Data2_End
+Osc_Data2_end

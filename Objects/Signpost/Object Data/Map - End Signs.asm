@@ -1,11 +1,11 @@
-Map_EndSigns:
-		dc.w word_83BAC-Map_EndSigns
-		dc.w word_83BBA-Map_EndSigns
-		dc.w word_83BC8-Map_EndSigns
-		dc.w word_83BD6-Map_EndSigns
-		dc.w word_83BE4-Map_EndSigns
-		dc.w word_83BEC-Map_EndSigns
-		dc.w word_83BF4-Map_EndSigns
+Map_endSigns:
+		dc.w word_83BAC-Map_endSigns
+		dc.w word_83BBA-Map_endSigns
+		dc.w word_83BC8-Map_endSigns
+		dc.w word_83BD6-Map_endSigns
+		dc.w word_83BE4-Map_endSigns
+		dc.w word_83BEC-Map_endSigns
+		dc.w word_83BF4-Map_endSigns
 word_83BAC:	dc.w 2
 		dc.b  $F0,  $B,	  0,   0, $FF, $E8
 		dc.b  $F0,  $B,	  0,  $C,   0,	 0

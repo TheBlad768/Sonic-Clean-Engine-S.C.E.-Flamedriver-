@@ -883,7 +883,7 @@ Reset_TileOffsetPositionEff:
 ; =============== S U B R O U T I N E =======================================
 
 Clear_Switches:
-		clearRAM2 Level_trigger_array, Level_trigger_array_End
+		clearRAM2 Level_trigger_array, Level_trigger_array_end
 		rts
 
 ; =============== S U B R O U T I N E =======================================
@@ -938,7 +938,7 @@ Reset_ObjectsPosition:
 
 Offset_ObjectsDuringTransition:
 		lea	(Dynamic_object_RAM+next_object).w,a1
-		moveq	#((Dynamic_object_RAM_End-Dynamic_object_RAM)/object_size)-1,d2
+		moveq	#((Dynamic_object_RAM_end-Dynamic_object_RAM)/object_size)-1,d2
 
 .check
 		tst.l	address(a1)
@@ -1051,9 +1051,9 @@ LoadLevelPointer:
 		add.w	d1,d0
 		lea	(LevelLoadPointer).l,a2
 		lea	(a2,d0.w),a2
-		lea	(Level_Data_addr_RAM).w,a3
+		lea	(Level_data_addr_RAM).w,a3
 
-	rept	(Level_data_addr_RAM_End-Level_data_addr_RAM)/4
+	rept	(Level_data_addr_RAM_end-Level_data_addr_RAM)/4
 		move.l	(a2)+,(a3)+
 	endr
 		rts

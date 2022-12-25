@@ -96,7 +96,7 @@ Eni_Decomp_SubC:
 
 Eni_Decomp_SubE:
 		cmpi.w	#$F,d2
-		beq.s	Eni_Decomp_End
+		beq.s	Eni_Decomp_end
 
 .loop:
 		bsr.s	Eni_Decomp_GetInlineCopyVal
@@ -124,7 +124,7 @@ Eni_Decomp_JmpTable:
 		bra.s	Eni_Decomp_SubE
 ; ---------------------------------------------------------------------------
 
-Eni_Decomp_End:
+Eni_Decomp_end:
 		subq.w	#1,a0
 		cmpi.w	#16,d6		; were we going to start on a completely new byte?
 		bne.s	.got_byte	; if not, branch

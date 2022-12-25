@@ -20,7 +20,7 @@
 		include "Objects/Bubbler/Bubbler.asm"
 		include "Objects/Count Down/Count Down.asm"
 		include "Objects/Water Wave/Water Wave.asm"
-		include "Objects/StarPost/StarPost.asm"
+		include "Objects/Starpost/Starpost.asm"
 		include "Objects/Button/Button.asm"
 		include "Objects/Animals/Animals.asm"
 		include "Objects/Egg Capsule/EggCapsule.asm"

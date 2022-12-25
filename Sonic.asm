@@ -66,7 +66,7 @@ SRAMSupport:
 CartRAM_Info:	dc.b "RA"
 CartRAM_Type:	dc.b $A0+(BackupSRAM<<6)+(AddressSRAM<<3), $20
 CartRAMStartLoc:dc.l SRAM_Size|SRAM_Type.SRAM_Start	; SRAM start ($200000)
-CartRAMEndLoc:	dc.l SRAM_Size|SRAM_Type.SRAM_End		; SRAM end ($20xxxx)
+CartRAMEndLoc:	dc.l SRAM_Size|SRAM_Type.SRAM_end		; SRAM end ($20xxxx)
 	else
 CartRAM_Info:	dc.b "  "
 CartRAM_Type:	dc.w %10000000100000

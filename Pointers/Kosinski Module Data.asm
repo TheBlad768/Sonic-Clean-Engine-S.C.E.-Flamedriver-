@@ -16,7 +16,7 @@ ArtKosM_BossExplosion:			binclude "Objects/Explosion/KosinskiM Art/Boss Explosio
 	even
 ArtKosM_Explosion:				binclude "Objects/Explosion/KosinskiM Art/Explosion.bin"
 	even
-ArtKosM_Lamp:					binclude "Objects/StarPost/KosinskiM Art/Enemy points.bin"
+ArtKosM_Lamp:					binclude "Objects/Starpost/KosinskiM Art/Enemy points.bin"
 	even
 ArtKosM_GrayButton:				binclude "Objects/Button/KosinskiM Art/Gray Button.bin"
 	even
@@ -56,11 +56,11 @@ ArtKosM_TitleCardNum4:			binclude "Objects/Title Card/KosinskiM Art/Title Card N
 	even
 ArtKosM_TitleCardRedAct:			binclude "Objects/Title Card/KosinskiM Art/Title Card Red ACT.bin"
 	even
-ArtKosM_StarPostStars1:			binclude "Objects/Starpost/KosinskiM Art/Starpost Stars 1.bin"
+ArtKosM_StarpostStars1:			binclude "Objects/Starpost/KosinskiM Art/Starpost Stars 1.bin"
 	even
-ArtKosM_StarPostStars2:			binclude "Objects/Starpost/KosinskiM Art/Starpost Stars 2.bin"
+ArtKosM_StarpostStars2:			binclude "Objects/Starpost/KosinskiM Art/Starpost Stars 2.bin"
 	even
-ArtKosM_StarPostStars3:			binclude "Objects/Starpost/KosinskiM Art/Starpost Stars 3.bin"
+ArtKosM_StarpostStars3:			binclude "Objects/Starpost/KosinskiM Art/Starpost Stars 3.bin"
 	even
 ArtKosM_LevelSelectText:			binclude "Data/Screens/Level Select/KosinskiM Art/Text.bin"
 	even

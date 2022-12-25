@@ -9,7 +9,7 @@ mus_Stop				ds.b 1		; $E2 - stop music and sound effects
 mus_MutePSG			ds.b 1		; $E3 - mute all PSG channels
 mus_StopSFX			ds.b 1		; $E4 - stop all sound effects
 mus_FadeOut2			ds.b 1		; $E5 - fade out music (duplicate)
-Mus__EndCmd =			*			; next ID after last sound command
+Mus__endCmd =			*			; next ID after last sound command
 
 mus_FA =				$FA			; $FA - ???
 mus_StopSEGA =			$FE			; $FE - Stop SEGA sound
@@ -37,7 +37,7 @@ mus_Drowning			ds.b 1		; $06
 
 mus_ExtraLife			= $00		; not used
 
-Mus__End =				*			; next ID after last music
+Mus__end =				*			; next ID after last music
 
 	dephase
 
@@ -54,7 +54,7 @@ sfx_Jump				ds.b 1		; $04
 sfx_Roll					ds.b 1		; $05
 sfx_Skid					ds.b 1		; $06
 sfx_Death				ds.b 1		; $07
-sfx_SpinDash				ds.b 1		; $08
+sfx_Spindash				ds.b 1		; $08
 sfx_Splash				ds.b 1		; $09
 sfx_InstaAttack			ds.b 1		; $0A
 sfx_FireShield			ds.b 1		; $0B
@@ -82,7 +82,7 @@ sfx_Register				ds.b 1		; $1E
 sfx__FirstContinuous =	*			; ID of the first continuous sound effect
 
 
-sfx__End =				*			; next ID after the last sound effect
+sfx__end =				*			; next ID after the last sound effect
 
 	dephase
 	!org 0							; make sure we reset the ROM position to 0
