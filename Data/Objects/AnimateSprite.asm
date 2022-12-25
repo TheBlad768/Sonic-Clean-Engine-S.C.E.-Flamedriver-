@@ -171,7 +171,7 @@ Anim_Run:
 		moveq	#0,d1
 		move.b	anim_frame(a0),d1
 		move.b	1(a1,d1.w),d0
-		bmi.s	Anim_End_FF
+		bmi.s	Anim_end_FF
 
 Anim_Next:
 		move.b	d0,d1
@@ -189,17 +189,17 @@ Anim_Wait:
 		rts
 ; ---------------------------------------------------------------------------
 
-Anim_End_FF:
+Anim_end_FF:
 		addq.b	#1,d0			; Code FF - Repeat animation from beginning
-		bne.s	Anim_End_FE
+		bne.s	Anim_end_FE
 		clr.b	anim_frame(a0)
 		move.b	1(a1),d0
 		bra.s	Anim_Next
 ; ---------------------------------------------------------------------------
 
-Anim_End_FE:
+Anim_end_FE:
 		addq.b	#1,d0			; Code FE - Repeat animation from earlier point
-		bne.s	Anim_End_FD
+		bne.s	Anim_end_FD
 		move.b	2(a1,d1.w),d0
 		sub.b	d0,anim_frame(a0)
 		sub.b	d0,d1
@@ -207,28 +207,28 @@ Anim_End_FE:
 		bra.s	Anim_Next
 ; ---------------------------------------------------------------------------
 
-Anim_End_FD:
+Anim_end_FD:
 		addq.b	#1,d0			; Code FD - Start new animation
-		bne.s	Anim_End_FC
+		bne.s	Anim_end_FC
 		move.b	2(a1,d1.w),anim(a0)
 		rts
 ; ---------------------------------------------------------------------------
 
-Anim_End_FC:
+Anim_end_FC:
 		addq.b	#1,d0			; Code FC - Increment routine counter
-		bne.s	Anim_End_FB
+		bne.s	Anim_end_FB
 		addq.b	#2,routine(a0)
 		clr.b	anim_frame_timer(a0)
 		addq.b	#1,anim_frame(a0)
 		rts
 ; ---------------------------------------------------------------------------
 
-Anim_End_FB:
+Anim_end_FB:
 		addq.b	#1,d0			; Code FB - Move offscreen (?)
-		bne.s	Anim_End
+		bne.s	Anim_end
 		move.w	#$7F00,x_pos(a0)
 		rts
 ; ---------------------------------------------------------------------------
 
-Anim_End:
+Anim_end:
 		rts

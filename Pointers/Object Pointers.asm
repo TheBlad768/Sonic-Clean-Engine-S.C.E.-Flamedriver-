@@ -55,7 +55,7 @@ Obj_Index:
 		dc.l DeleteObject						; $31
 		dc.l DeleteObject						; $32
 		dc.l Obj_Button						; $33
-		dc.l Obj_StarPost						; $34
+		dc.l Obj_Starpost						; $34
 		dc.l DeleteObject						; $35
 		dc.l DeleteObject						; $36
 		dc.l DeleteObject						; $37

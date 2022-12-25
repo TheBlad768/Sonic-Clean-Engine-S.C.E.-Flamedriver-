@@ -414,27 +414,27 @@ MusID_ExtraLife			= 2Ah
 		endif
 	endif
 
-	ifndef MusID__End
-		ifdef Mus__End
-MusID__End				= Mus__End
+	ifndef MusID__end
+		ifdef Mus__end
+MusID__end				= Mus__end
 		else
 			ifdef bgm__Last
-MusID__End				= bgm__Last
+MusID__end				= bgm__Last
 			endif
 		endif
-		ifndef MusID__End
-MusID__End				= 33h
+		ifndef MusID__end
+MusID__end				= 33h
 		endif
 	endif
 
 	ifdef MusID_SKCredits
-		if MusID_SKCredits>=MusID__End
-			fatal "S&K Credits music must have an ID within the music range of [$\{MusID__First}, $\{MusID__End}), but it has ID $\{MusID_SKCredits}"
+		if MusID_SKCredits>=MusID__end
+			fatal "S&K Credits music must have an ID within the music range of [$\{MusID__First}, $\{MusID__end}), but it has ID $\{MusID_SKCredits}"
 		endif
 	endif
 	ifdef mus_CreditsK
-		if mus_CreditsK>=MusID__End
-			fatal "S&K Credits music must have an ID within the music range of [$\{MusID__First}, $\{MusID__End}), but it has ID $\{mus_CreditsK}"
+		if mus_CreditsK>=MusID__end
+			fatal "S&K Credits music must have an ID within the music range of [$\{MusID__First}, $\{MusID__end}), but it has ID $\{mus_CreditsK}"
 		endif
 	endif
 
@@ -502,16 +502,16 @@ SndID_SpindashRev		= 0ABh-33h+SndID__First
 		endif
 	endif
 
-	ifndef SndID__End
-		ifdef sfx__End
-SndID__End				= sfx__End
+	ifndef SndID__end
+		ifdef sfx__end
+SndID__end				= sfx__end
 		else
 			ifdef sfx__Last
-SndID__End				= sfx__Last
+SndID__end				= sfx__Last
 			endif
 		endif
-		ifndef SndID__End
-SndID__End				= 0E0h-33h+SndID__First
+		ifndef SndID__end
+SndID__end				= 0E0h-33h+SndID__First
 		endif
 	endif
 
@@ -524,22 +524,22 @@ SndID__FirstContinuous	= 0BCh-33h+SndID__First
 	endif
 
 	ifndef SndID__FirstContinuous
-SndID__FirstContinuous	= SndID__End
+SndID__FirstContinuous	= SndID__end
 	endif
 
 	ifndef DACID__First
 		ifdef dac__First
 DACID__First	= dac__First
 		else
-DACID__First	= SndID__End
+DACID__First	= SndID__end
 		endif
 	endif
 
-	ifndef DACID__End
-		ifdef dac__End
-DACID__End	= dac__End
+	ifndef DACID__end
+		ifdef dac__end
+DACID__end	= dac__end
 		else
-DACID__End	= SndID__End
+DACID__end	= SndID__end
 		endif
 	endif
 
@@ -556,16 +556,16 @@ FadeID__First			= 0E1h
 		endif
 	endif
 
-	ifndef FadeID__End
-		ifdef Mus__EndCmd
-FadeID__End				= Mus__EndCmd
+	ifndef FadeID__end
+		ifdef Mus__endCmd
+FadeID__end				= Mus__endCmd
 		else
 			ifdef flg__Last
-FadeID__End				= flg__Last
+FadeID__end				= flg__Last
 			endif
 		endif
-		ifndef FadeID__End
-FadeID__End				= 0E6h
+		ifndef FadeID__end
+FadeID__end				= 0E6h
 		endif
 	endif
 
@@ -909,7 +909,7 @@ zUpdateMusic:
 		ld	a, (zMusicNumber)				; Get next music to play
 		cp	MusID_ExtraLife					; Is it another 1-Up?
 		jr	z, .clr_queue					; Branch if yes
-		cp	MusID__End-1					; Is it music?
+		cp	MusID__end-1					; Is it music?
 		jr	c, .clr_sfx						; Branch if not
 
 .clr_queue:
@@ -1060,7 +1060,7 @@ zFMSendFreq:
 		cp	ymFM3							; Is this FM3?
 		jr	nz, .not_fm3					; Branch if not
 		call	zGetSpecialFM3DataPointer	; de = pointer to saved FM3 frequency shifts
-		ld	b, zSpecialFreqCommands_End-zSpecialFreqCommands	; Number of entries
+		ld	b, zSpecialFreqCommands_end-zSpecialFreqCommands	; Number of entries
 		ld	hl, zSpecialFreqCommands		; Lookup table
 
 .loop:
@@ -1097,7 +1097,7 @@ zSpecialFreqCommands:
 		db ymCH3FrequencyHigh2				; Operator 3 frequency MSB
 		db ymCH3FrequencyHigh3				; Operator 2 frequency MSB
 		db ymCH3FrequencyHigh4				; Operator 1 frequency MSB
-zSpecialFreqCommands_End
+zSpecialFreqCommands_end
 
 ; =============== S U B	R O U T	I N E =======================================
 ;
@@ -1369,7 +1369,7 @@ zDoFMVolEnv:
 		ld	h, (ix+zTrack.TLPtrHigh)			; h = high byte to TL data pointer
 		ld	l, (ix+zTrack.TLPtrLow)			; l = low byte to TL data pointer
 		ld	de, zFMInstrumentTLTable		; de = pointer to FM TL register table
-		ld	b, zFMInstrumentTLTable_End-zFMInstrumentTLTable	; Number of entries
+		ld	b, zFMInstrumentTLTable_end-zFMInstrumentTLTable	; Number of entries
 		ld	c, a							; Save volume envelope
 		ld	a, (ix+zTrack.FMVolEnvMask)		; a = envelope bitmask
 
@@ -1696,21 +1696,21 @@ zFMInstrumentD1LRRTable:
 		db ymSustainLevelReleaseRate3		; Secondary amplitude/release rate operator 3
 		db ymSustainLevelReleaseRate2		; Secondary amplitude/release rate operator 2
 		db ymSustainLevelReleaseRate4		; Secondary amplitude/release rate operator 4
-zFMInstrumentOperatorTable_End
+zFMInstrumentOperatorTable_end
 ;loc_4B1
 zFMInstrumentTLTable:
 		db ymTotalLevel1					; Total level operator 1
 		db ymTotalLevel3					; Total level operator 3
 		db ymTotalLevel2					; Total level operator 2
 		db ymTotalLevel4					; Total level operator 4
-zFMInstrumentTLTable_End
+zFMInstrumentTLTable_end
 ;loc_4B5
 zFMInstrumentSSGEGTable:
 		db ymSSGEG1							; SSG-EG operator 1
 		db ymSSGEG3							; SSG-EG operator 3
 		db ymSSGEG2							; SSG-EG operator 2
 		db ymSSGEG4							; SSG-EG operator 4
-zFMInstrumentSSGEGTable_End
+zFMInstrumentSSGEGTable_end
 
 ; =============== S U B	R O U T	I N E =======================================
 ; Subroutine to send FM instrument data to YM2612 chip.
@@ -1720,7 +1720,7 @@ zSendFMInstrument:
 		bit	bitSFXOverride, (ix+zTrack.PlaybackControl)	; Is SFX overriding this track?
 		jr	z, .active						; Is so, quit
 
-		ld	c, zFMInstrumentOperatorTable_End-zFMInstrumentRegTable
+		ld	c, zFMInstrumentOperatorTable_end-zFMInstrumentRegTable
 		ld	b, 0
 		add	hl, bc							; Point hl to TL data
 		ld	(ix+zTrack.TLPtrLow), l			; Save low byte of pointer to (not yet uploaded) TL data
@@ -1732,7 +1732,7 @@ zSendFMInstrument:
 		zGetFMPartPointer					; Point iy to appropriate FM part
 		ld	de, zFMInstrumentRegTable		; de = pointer to register output table
 		zFastWriteFM ymPanningAMSensFMSens, (ix+zTrack.AMSFMSPan)
-		ld	b, zFMInstrumentOperatorTable_End-zFMInstrumentRegTable	; Number of commands to issue
+		ld	b, zFMInstrumentOperatorTable_end-zFMInstrumentRegTable	; Number of commands to issue
 		ld	a, (ix+zTrack.HaveSSGEGFlag)	; Get custom SSG-EG flag
 		or	a								; Does track have custom SSG-EG data?
 		jp	p, .sendinstrument				; Branch if not
@@ -1748,7 +1748,7 @@ zSendFMInstrument:
 		call	zSendFMInstrDataRSAR		; Send FM instrument data
 
 		; Finalize with all the other operators.
-		ld	b, zFMInstrumentOperatorTable_End-zFMInstrumentAMD1RTable	; Number of commands to issue
+		ld	b, zFMInstrumentOperatorTable_end-zFMInstrumentAMD1RTable	; Number of commands to issue
 
 .sendinstrument:
 		call	zSendFMInstrData			; Send FM instrument data
@@ -1805,11 +1805,11 @@ zPlaySFXByIndex:
 		cp	SndID__First					; Is this below the sound start point?
 		ret	c								; Return if yes
 	endif
-		cp	SndID__End						; Is this a sound effect?
+		cp	SndID__end						; Is this a sound effect?
 		jp	c, zPlaySound_CheckRing			; Branch if yes
 		cp	DACID__First
 		ret	c
-		cp	DACID__End
+		cp	DACID__end
 		ret	nc
 		; "PlayVoice/PlayDACSFX" in ValleyBell's SMPS disassemblies
 		sub	DACID__First-1
@@ -1845,11 +1845,11 @@ zCycleMusicQueue:
 zPlaySoundByIndex:
 		cp	MusID_SegaSound					; Is this the SEGA sound?
 		jp	z, zPlaySegaSound				; Branch if yes
-		cp	MusID__End						; Is this a music?
+		cp	MusID__end						; Is this a music?
 		jp	c, zPlayMusic					; Branch if yes
 		cp	FadeID__First					; Is it before the first fade effect?
 		jp	c, zMusicFade					; Branch if yes
-		cp	FadeID__End						; Is this after the last fade effect?
+		cp	FadeID__end						; Is this after the last fade effect?
 		jp	nc, zMusicFade					; Branch if yes
 		sub	FadeID__First					; If none of the checks passed, do fade effects.
 		ld	hl, zFadeEffects				; hl = switch table pointer
@@ -3290,7 +3290,7 @@ zSendTL:
 		ld	h, (ix+zTrack.TLPtrHigh)		; h = high byte of pointer to instrument's TL data
 
 .got_pointers:
-		ld	b, zFMInstrumentTLTable_End-zFMInstrumentTLTable	; Number of entries
+		ld	b, zFMInstrumentTLTable_end-zFMInstrumentTLTable	; Number of entries
 
 .loop:
 		zFastWriteFM (de), (hl), calcVolume
@@ -4066,7 +4066,7 @@ zSendSSGEGData:
 		add	hl, bc							; hl = pointer to RS/AR data
 		push	hl							; Save hl (**)
 		ld	hl, zFMInstrumentSSGEGTable		; hl = pointer to registers for SSG-EG data
-		ld	b, zFMInstrumentSSGEGTable_End-zFMInstrumentSSGEGTable	; Number of entries
+		ld	b, zFMInstrumentSSGEGTable_end-zFMInstrumentSSGEGTable	; Number of entries
 
 .loop:
 		ld	a, (de)							; Get data to sent to SSG-EG register
@@ -4451,7 +4451,7 @@ zPlaySEGAPCM:
 		ld	a, zmake68kBank(SEGA_PCM)		; a = sound bank index
 		bankswitchLoop						; Bank switch to sound bank
 		ld	hl, zmake68kPtr(SEGA_PCM)		; hl = pointer to SEGA PCM
-		ld	de, SEGA_PCM_End-SEGA_PCM		; de = length of SEGA PCM
+		ld	de, SEGA_PCM_end-SEGA_PCM		; de = length of SEGA PCM
 		ld	a, ymDACPCM						; DAC channel register
 		ld	(zYM2612_A0), a					; Send to YM2612
 		nop									; Delay
@@ -4747,7 +4747,7 @@ z80_SoundDriverPointersEnd:
 		padding off
 		!org		z80_SoundDriver+Size_of_Snd_driver_guess
 
-Z80_Snd_Driver_End:
+Z80_Snd_Driver_end:
 
 little_endian function x,((x)<<8)&$FF00|((x)>>8)&$FF
 
@@ -4922,8 +4922,8 @@ MusicPointers label *
 	declsong MusData_Through
 	declsong MusData_Drowning
 
-	ifndef zMusIDPtr__End
-zMusIDPtr__End label *
+	ifndef zMusIDPtr__end
+zMusIDPtr__end label *
 	endif
 	endm
 ; ---------------------------------------------------------------------------
@@ -5088,10 +5088,10 @@ Sound_1C_Ptr:	offsetBankTableEntry.w Sound_1C
 Sound_1D_Ptr:	offsetBankTableEntry.w Sound_1D
 Sound_1E_Ptr:	offsetBankTableEntry.w Sound_1E
 
-Sound_End_Ptr
+Sound_end_Ptr
 ; ---------------------------------------------------------------------------
 SEGA_PCM:	binclude "Sound/Sega PCM.bin"
-SEGA_PCM_End
+SEGA_PCM_end
 		even
 Sound_01:	include "Sound/SFX/Snd - Ring.asm"
 Sound_02:	include "Sound/SFX/Snd - Ring Left Speaker.asm"

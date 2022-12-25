@@ -1,9 +1,9 @@
-Map_StarPost:
-		dc.w word_2D352-Map_StarPost
-		dc.w word_2D36C-Map_StarPost
-		dc.w word_2D380-Map_StarPost
-		dc.w word_2D388-Map_StarPost
-		dc.w word_2D390-Map_StarPost
+Map_Starpost:
+		dc.w word_2D352-Map_Starpost
+		dc.w word_2D36C-Map_Starpost
+		dc.w word_2D380-Map_Starpost
+		dc.w word_2D388-Map_Starpost
+		dc.w word_2D390-Map_Starpost
 word_2D352:	dc.w 4
 		dc.b  $E8,   1,	  0,  $E, $FF, $FC
 		dc.b  $F8,   3,	  0, $10, $FF, $F8

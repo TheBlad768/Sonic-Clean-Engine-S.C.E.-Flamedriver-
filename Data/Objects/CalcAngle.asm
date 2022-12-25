@@ -58,10 +58,10 @@ CalcAngle_GetAtan2Val:
 
 CalcAngle_YZero:
 		tst.b	d0							; Was the X value negated?
-		beq.s	CalcAngle_End			; If not, branch (d0 is already 0, so no need to set it again on branch)
+		beq.s	CalcAngle_end			; If not, branch (d0 is already 0, so no need to set it again on branch)
 		moveq	#-$80,d0				; 180 degrees
 
-CalcAngle_End:
+CalcAngle_end:
 		rts
 ; -------------------------------------------------------------------------
 

@@ -1,10 +1,10 @@
 ; ---------------------------------------------------------------------------
-; StarPost (Object)
+; Starpost (Object)
 ; ---------------------------------------------------------------------------
 
 ; =============== S U B R O U T I N E =======================================
 
-Obj_StarPost:
+Obj_Starpost:
 		moveq	#0,d0
 		move.b	routine(a0),d0
 		move.w	off_2CFB6(pc,d0.w),d1
@@ -21,7 +21,7 @@ off_2CFB6: offsetTable
 
 loc_2CFC0:
 		addq.b	#2,routine(a0)
-		move.l	#Map_StarPost,mappings(a0)
+		move.l	#Map_Starpost,mappings(a0)
 		move.w	#$5EC,art_tile(a0)
 		move.b	#4,render_flags(a0)
 		move.w	#bytes_to_word(80/2,16/2),height_pixels(a0)		; set height and width
@@ -71,7 +71,7 @@ sub_2D028:
 		sfx	sfx_Starpost
 		jsr	(Create_New_Sprite).w
 		bne.s	loc_2D0D0
-		move.l	#Obj_StarPost,address(a1)
+		move.l	#Obj_Starpost,address(a1)
 		move.b	#6,routine(a1)
 		move.w	x_pos(a0),$30(a1)
 		move.w	y_pos(a0),$32(a1)
@@ -120,7 +120,7 @@ loc_2D10A:
 		subq.w	#1,$36(a0)
 		bpl.s	loc_2D12E
 		movea.w	$3E(a0),a1
-		cmpi.l	#Obj_StarPost,address(a1)
+		cmpi.l	#Obj_Starpost,address(a1)
 		bne.s	loc_2D128
 		move.b	#2,anim(a1)
 		clr.b	mapping_frame(a1)
@@ -222,7 +222,7 @@ sub_2D3C8:
 		move.w	d2,$34(a1)
 		addi.w	#$40,d2
 		dbf	d1,-
-+		lea	(ArtKosM_StarPostStars3).l,a1
++		lea	(ArtKosM_StarpostStars3).l,a1
 		move.w	(Ring_count).w,d0
 		subi.w	#20,d0
 		divu.w	#15,d0
@@ -232,10 +232,10 @@ sub_2D3C8:
 		swap	d0
 		tst.w	d0
 		beq.s	+
-		lea	(ArtKosM_StarPostStars1).l,a1
+		lea	(ArtKosM_StarpostStars1).l,a1
 		cmpi.w	#1,d0
 		beq.s	+
-		lea	(ArtKosM_StarPostStars2).l,a1
+		lea	(ArtKosM_StarpostStars2).l,a1
 +		move.w	#tiles_to_bytes($5EC),d2
 		jmp	(Queue_Kos_Module).w
 ; ---------------------------------------------------------------------------
@@ -343,7 +343,7 @@ loc_2D5C0:
 		jmp	(Delete_Current_Sprite).w
 ; ---------------------------------------------------------------------------
 
-		include "Objects/StarPost/Object Data/Anim - Starpost.asm"
-		include "Objects/StarPost/Object Data/Map - Starpost.asm"
-		include "Objects/StarPost/Object Data/Map - Starpost Stars.asm"
-		include "Objects/StarPost/Object Data/Map - Enemy Points.asm"
+		include "Objects/Starpost/Object Data/Anim - Starpost.asm"
+		include "Objects/Starpost/Object Data/Map - Starpost.asm"
+		include "Objects/Starpost/Object Data/Map - Starpost Stars.asm"
+		include "Objects/Starpost/Object Data/Map - Enemy Points.asm"

@@ -18,7 +18,7 @@ Obj_HiddenMonitorMain:
 		move.w	(Signpost_addr).w,d0
 		beq.s	loc_8375A
 		movea.w	d0,a1						; get Signpost address
-		cmpi.l	#Obj_EndSign,address(a1)
+		cmpi.l	#Obj_endSign,address(a1)
 		bne.s	loc_8375A					; if no signpost is active, branch
 		btst	#0,objoff_38(a1)
 		beq.s	loc_8375A					; if signpost hasn't landed, branch

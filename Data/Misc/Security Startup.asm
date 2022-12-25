@@ -23,7 +23,7 @@ SkipSecurity:
 		moveq	#0,d0
 		movea.l	d0,a6
 		move.l	a6,usp	; set usp to $0
-		moveq	#VDPInitValues_End-VDPInitValues-1,d1
+		moveq	#VDPInitValues_end-VDPInitValues-1,d1
 
 Init_VDPRegs:
 		move.b	(a5)+,d5
@@ -65,7 +65,7 @@ Init_ClearCRAM:
 Init_ClearVSRAM:
 		move.l	d0,(a3)			; Clear VSRAM
 		dbf	d4,Init_ClearVSRAM
-		moveq	#PSGInitValues_End-PSGInitValues-1,d5
+		moveq	#PSGInitValues_end-PSGInitValues-1,d5
 
 Init_InputPSG:
 		move.b	(a5)+,PSG_input-VDP_data_port(a3) ; reset the PSG
@@ -112,7 +112,7 @@ VDPInitValues:		; values for VDP registers
 		dc.b 0		; Command $9500 - DMA Source Address $0
 		dc.b 0		; Command $9600 - See above
 		dc.b $80		; Command $9700 - See above + VRAM fill mode
-VDPInitValues_End:
+VDPInitValues_end:
 
 		dc.l	vdpComm($0000,VRAM,DMA) ; value for VRAM write mode
 
@@ -164,7 +164,7 @@ Z80StartupCodeEnd:
 
 PSGInitValues:
 		dc.b	$9F,$BF,$DF,$FF	; values for PSG channel volumes
-PSGInitValues_End:
+PSGInitValues_end:
 ; ---------------------------------------------------------------------------
 
 Game_Program:
@@ -179,7 +179,7 @@ Game_Program:
 		bne.s	.wait	; wait till a DMA is completed
 		lea	((RAM_start&$FFFFFF)).l,a6
 		moveq	#0,d7
-		move.w	#bytesToLcnt(System_Stack&$FFFF),d6
+		move.w	#bytesToLcnt(System_stack&$FFFF),d6
 
 .clear
 		move.l	d7,(a6)+

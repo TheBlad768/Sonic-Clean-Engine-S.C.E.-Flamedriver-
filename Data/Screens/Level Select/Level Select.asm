@@ -13,8 +13,8 @@ LevelSelect_MusicTestCount:		= 8
 LevelSelect_SoundTestCount:		= LevelSelect_MusicTestCount+1
 LevelSelect_SampleTestCount:		= LevelSelect_SoundTestCount+1
 LevelSelect_MaxCount:			= 11
-LevelSelect_MaxMusicNumber:		= (Mus__End-Mus__First)-1
-LevelSelect_MaxSoundNumber:		= (sfx__End-sfx__First)-1
+LevelSelect_MaxMusicNumber:		= (Mus__end-Mus__First)-1
+LevelSelect_MaxSoundNumber:		= (sfx__end-sfx__First)-1
 LevelSelect_MaxSampleNumber:	= $58
 
 ; RAM
@@ -462,7 +462,7 @@ LevelSelect_Deform:
 		jmp	(HScroll_Deform).w
 ; ---------------------------------------------------------------------------
 
-LevelSelectScroll_Data: dScroll_Header
+LevelSelectScroll_Data: dScroll_header
 		dScroll_Data 0, 8, -$100, 8
 LevelSelectScroll_Data_end
 

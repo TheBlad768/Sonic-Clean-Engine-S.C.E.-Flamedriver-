@@ -179,7 +179,7 @@ HUD_DrawInitial:
 		lea	(VDP_data_port).l,a6
 		locVRAM	tiles_to_bytes($6D4),VDP_control_port-VDP_data_port(a6)
 		lea	HUD_Initial_Parts(pc),a2
-		moveq	#(HUD_Initial_Parts_End-HUD_Initial_Parts)-1,d2
+		moveq	#(HUD_Initial_Parts_end-HUD_Initial_Parts)-1,d2
 
 .main
 		lea	(ArtUnc_Hud).l,a1
@@ -228,7 +228,7 @@ HUD_Initial_Parts:
 		dc.b "0*00:00"
 HUD_Zero_Rings:
 		dc.b "  0"		; (zero rings)
-HUD_Initial_Parts_End
+HUD_Initial_Parts_end
 		even
 
 		CHARSET ; reset character set

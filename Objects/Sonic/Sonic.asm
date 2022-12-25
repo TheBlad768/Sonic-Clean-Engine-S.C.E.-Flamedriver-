@@ -21,7 +21,7 @@ Obj_Sonic:
 		beq.s	+
 		clr.w	(Debug_placement_mode).w	; Leave debug mode
 +		addq.b	#1,mapping_frame(a0)		; Next frame
-		cmpi.b	#((Map_Sonic_End-Map_Sonic)/2)-1,mapping_frame(a0)	; Have we reached the end of Sonic's frames?
+		cmpi.b	#((Map_Sonic_end-Map_Sonic)/2)-1,mapping_frame(a0)	; Have we reached the end of Sonic's frames?
 		blo.s		+
 		clr.b	mapping_frame(a0)	; If so, reset to Sonic's first frame
 +		bsr.w	Sonic_Load_PLC
@@ -1350,7 +1350,7 @@ SonicKnux_Spindash:
 		andi.b	#btnA+btnB+btnC,d0
 		beq.s	locret_11A14
 		move.b	#id_SpinDash,anim(a0)
-		sfx	$FF00|sfx_SpinDash,0,1
+		sfx	$FF00|sfx_Spindash,0,1
 		addq.l	#4,sp
 		move.b	#1,spin_dash_flag(a0)
 		clr.w	spin_dash_counter(a0)
@@ -1434,7 +1434,7 @@ loc_11D2E:
 		andi.b	#btnA+btnB+btnC,d0
 		beq.w	loc_11D5E
 		move.w	#bytes_to_word(id_SpinDash,id_Walk),anim(a0)
-		sfx	$FF00|sfx_SpinDash,0,1
+		sfx	$FF00|sfx_Spindash,0,1
 		addi.w	#$200,spin_dash_counter(a0)
 		cmpi.w	#$800,spin_dash_counter(a0)
 		bcs.s	loc_11D5E
@@ -2238,7 +2238,7 @@ SAnim_Do2:
 		move.b	anim_frame(a0),d1
 		move.b	1(a1,d1.w),d0
 		cmpi.b	#-4,d0
-		bcc.s	SAnim_End_FF
+		bcc.s	SAnim_end_FF
 
 SAnim_Next:
 		move.b	d0,mapping_frame(a0)
@@ -2248,17 +2248,17 @@ SAnim_Delay:
 		rts
 ; ---------------------------------------------------------------------------
 
-SAnim_End_FF:
+SAnim_end_FF:
 		addq.b	#1,d0
-		bne.s	SAnim_End_FE
+		bne.s	SAnim_end_FE
 		clr.b	anim_frame(a0)
 		move.b	1(a1),d0
 		bra.s	SAnim_Next
 ; ---------------------------------------------------------------------------
 
-SAnim_End_FE:
+SAnim_end_FE:
 		addq.b	#1,d0
-		bne.s	SAnim_End_FD
+		bne.s	SAnim_end_FD
 		move.b	2(a1,d1.w),d0
 		sub.b	d0,anim_frame(a0)
 		sub.b	d0,d1
@@ -2266,12 +2266,12 @@ SAnim_End_FE:
 		bra.s	SAnim_Next
 ; ---------------------------------------------------------------------------
 
-SAnim_End_FD:
+SAnim_end_FD:
 		addq.b	#1,d0
-		bne.s	SAnim_End
+		bne.s	SAnim_end
 		move.b	2(a1,d1.w),anim(a0)
 
-SAnim_End:
+SAnim_end:
 		rts
 ; ---------------------------------------------------------------------------
 
