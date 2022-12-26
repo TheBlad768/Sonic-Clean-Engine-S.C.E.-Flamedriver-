@@ -3,7 +3,7 @@
   <Images>
     <ImageFromMappings id="img">
       <ArtFile filename="../Objects/StarPost/KosinskiM Art/Enemy points.bin" offset="-256" compression="KosinskiM" />
-      <MapFile type="ASM" filename="../Objects/StarPost/Object Data/Map - Starpost.asm" />
+      <MapFile type="ASM" filename="../Objects/StarPost/Object Data/Map - StarPost.asm" />
     </ImageFromMappings>
   </Images>
   <Properties>

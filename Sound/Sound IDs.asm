@@ -66,7 +66,7 @@ sfx_ElectricAttack			ds.b 1		; $10
 sfx_SpikeHit				ds.b 1		; $11
 sfx_SpikeMove			ds.b 1		; $12
 sfx_Drown				ds.b 1		; $13
-sfx_Starpost				ds.b 1		; $14
+sfx_StarPost				ds.b 1		; $14
 sfx_Spring				ds.b 1		; $15
 sfx_Dash					ds.b 1		; $16
 sfx_Break				ds.b 1		; $17
