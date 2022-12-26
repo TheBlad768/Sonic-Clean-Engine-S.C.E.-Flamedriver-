@@ -10,7 +10,7 @@ SndDrvInit:
 		SMPS_resetZ80			; release Z80 reset
 
 		; load SMPS sound driver
-		lea	(Z80_SoundDriver).l,a0
+		lea	(z80_SoundDriver).l,a0
 		lea	(Z80_RAM).l,a1
 		bsr.w	Kos_Decomp
 

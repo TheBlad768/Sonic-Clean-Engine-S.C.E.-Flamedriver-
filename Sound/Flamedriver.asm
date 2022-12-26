@@ -489,8 +489,8 @@ RingSoundsAdjacent := 0
 	endif
 
 	ifndef SndID_SpindashRev
-		ifdef sfx_Spindash
-SndID_SpindashRev		= sfx_Spindash
+		ifdef sfx_SpinDash
+SndID_SpindashRev		= sfx_SpinDash
 		else
 			ifdef sfx_Roll
 SndID_SpindashRev		= sfx_Roll
@@ -5112,7 +5112,7 @@ Sound_10:	include "Sound/SFX/Snd - Electric Attack.asm"
 Sound_11:	include "Sound/SFX/Snd - Spike Hit.asm"
 Sound_12:	include "Sound/SFX/Snd - Spike Move.asm"
 Sound_13:	include "Sound/SFX/Snd - Drown.asm"
-Sound_14:	include "Sound/SFX/Snd - Starpost.asm"
+Sound_14:	include "Sound/SFX/Snd - StarPost.asm"
 Sound_15:	include "Sound/SFX/Snd - Spring.asm"
 Sound_16:	include "Sound/SFX/Snd - Dash.asm"
 Sound_17:	include "Sound/SFX/Snd - Break.asm"

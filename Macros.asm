@@ -1009,10 +1009,10 @@ LoadMapUnc	macro offset,size,arg,loc,width,height
 ; ---------------------------------------------------------------------------
 
 ; macro for a pattern load request list header
-; must be on the same line as a label that has a corresponding _End label later
+; must be on the same line as a label that has a corresponding _end label later
 plrlistheader macro {INTLABEL}
 __LABEL__ label *
-	dc.w (((__LABEL___End - __LABEL__Plc) / 6) - 1)
+	dc.w (((__LABEL___end - __LABEL__Plc) / 6) - 1)
 __LABEL__Plc:
     endm
 
@@ -1081,9 +1081,9 @@ offsetEntry macro ptr
     endm
 ; ---------------------------------------------------------------------------
 
-dScroll_header macro {INTLABEL}
+dScroll_Header  macro {INTLABEL}
 __LABEL__ label *
-	dc.w (((__LABEL___End - __LABEL__Plc) / 6) - 1)
+	dc.w (((__LABEL___end - __LABEL__Plc) / 6) - 1)
 __LABEL__Plc:
     endm
 
