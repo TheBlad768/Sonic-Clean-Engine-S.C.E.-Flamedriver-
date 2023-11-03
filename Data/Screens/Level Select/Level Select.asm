@@ -4,7 +4,7 @@
 
 ; Constants
 LevelSelect_Offset:				= *
-LevelSelect_VRAM:				= $7B8
+LevelSelect_VRAM:				= 0
 
 ; Variables
 LevelSelect_ZoneCount:			= ZoneCount
@@ -13,7 +13,7 @@ LevelSelect_MusicTestCount:		= 8
 LevelSelect_SoundTestCount:		= LevelSelect_MusicTestCount+1
 LevelSelect_SampleTestCount:		= LevelSelect_SoundTestCount+1
 LevelSelect_MaxCount:			= 11
-LevelSelect_MaxMusicNumber:		= (Mus__End-Mus__First)-1
+LevelSelect_MaxMusicNumber:		= (mus__End-mus__First)-1
 LevelSelect_MaxSoundNumber:		= (sfx__End-sfx__First)-1
 LevelSelect_MaxSampleNumber:	= $58
 
@@ -58,7 +58,7 @@ LevelSelect_Screen:
 		move.b	d0,(Level_started_flag).w
 		ResetDMAQueue
 		lea	(ArtKosM_LevelSelectText).l,a1
-		move.w	#tiles_to_bytes($7C0),d2
+		move.w	#tiles_to_bytes(1),d2
 		jsr	(Queue_Kos_Module).w
 		lea	(Pal_LevelSelect).l,a1
 		lea	(Target_palette).w,a2
@@ -164,8 +164,8 @@ LevelSelect_LoadMusicNumber:
 		andi.b	#btnABC,d1
 		beq.s	LevelSelect_LoadLevel_Return
 		move.w	d3,d0
-		addq.w	#Mus__First,d0		; $00 is reserved for silence
-		jmp	(Play_Music).w			; play music
+		addq.w	#mus__First,d0		; $00 is reserved for silence
+		jmp	(Play_Music).w	; play music
 
 ; ---------------------------------------------------------------------------
 ; Load Sound
@@ -182,7 +182,7 @@ LevelSelect_LoadSoundNumber:
 		beq.s	LevelSelect_LoadLevel_Return
 		move.w	d3,d0
 		addq.w	#sfx__First,d0
-		jmp	(Play_SFX).w				; play sfx
+		jmp	(Play_SFX).w			; play sfx
 
 ; ---------------------------------------------------------------------------
 ; Load Sample
@@ -199,7 +199,7 @@ LevelSelect_LoadSampleNumber:
 		beq.s	LevelSelect_LoadLevel_Return
 		move.w	d3,d0
 		addq.w	#1,d0
-		jmp	(Play_Sample).w			; play sample
+		jmp	(Play_Sample).w		; play sample
 
 ; ---------------------------------------------------------------------------
 ; Control (Up/Down)
@@ -443,7 +443,7 @@ LevelSelect_MarkFields:
 		addq.b	#7,d0
 
 .skipsymbols
-		addq.b	#8,d0
+		addq.b	#1,d0
 		add.w	d3,d0
 		move.w	d0,VDP_data_port-VDP_data_port(a6)
 

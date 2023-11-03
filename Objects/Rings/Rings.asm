@@ -140,7 +140,7 @@ loc_1A728:
 		dbf	d5,loc_1A6AE
 
 loc_1A738:
-		sfx	$FF00|sfx_RingLoss,0,1	; play ring loss sound
+		sfx	sfx_RingLoss		; play ring loss sound
 		clr.w	(Ring_count).w
 		move.b	#$80,(Update_HUD_ring_count).w
 		tst.b	(Reverse_gravity_flag).w
@@ -152,7 +152,7 @@ loc_1A75C:
 		bmi.s	loc_1A7B0
 		move.b	(V_int_run_count+3).w,d0
 		add.b	d7,d0
-		andi.b	#7,d0
+		andi.b	#3,d0
 		bne.s	loc_1A7B0
 		tst.b	render_flags(a0)
 		bpl.s	loc_1A79C
@@ -200,7 +200,7 @@ loc_1A7E8:
 		bmi.s	loc_1A83C
 		move.b	(V_int_run_count+3).w,d0
 		add.b	d7,d0
-		andi.b	#7,d0
+		andi.b	#3,d0
 		bne.s	loc_1A83C
 		tst.b	render_flags(a0)
 		bpl.s	loc_1A828

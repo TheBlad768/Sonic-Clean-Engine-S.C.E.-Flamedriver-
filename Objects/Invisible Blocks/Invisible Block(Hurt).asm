@@ -27,7 +27,7 @@ Obj_Invisible_LavaBlock:
 
 Obj_Invisible_HurtBlock:
 		move.l	#Map_InvisibleBlock,mappings(a0)
-		move.w	#make_art_tile(ArtTile_Powerups,0,1),art_tile(a0)
+		move.w	#make_art_tile(ArtTile_Monitors,0,1),art_tile(a0)
 		ori.b	#4,render_flags(a0)
 		move.w	#$200,priority(a0)
 		bset	#7,status(a0)
@@ -60,9 +60,8 @@ loc_1F458:
 		move.l	#loc_1F45E,address(a0)
 
 loc_1F45E:
-		moveq	#0,d1
-		move.b	width_pixels(a0),d1
-		addi.w	#$B,d1
+		moveq	#$B,d1
+		add.b	width_pixels(a0),d1
 		moveq	#0,d2
 		move.b	height_pixels(a0),d2
 		move.w	d2,d3
@@ -86,9 +85,8 @@ loc_1F4A2:
 ; ---------------------------------------------------------------------------
 
 loc_1F4C4:
-		moveq	#0,d1
-		move.b	width_pixels(a0),d1
-		addi.w	#$B,d1
+		moveq	#$B,d1
+		add.b	width_pixels(a0),d1
 		moveq	#0,d2
 		move.b	height_pixels(a0),d2
 		move.w	d2,d3
@@ -112,9 +110,8 @@ loc_1F506:
 ; ---------------------------------------------------------------------------
 
 loc_1F528:
-		moveq	#0,d1
-		move.b	width_pixels(a0),d1
-		addi.w	#$B,d1
+		moveq	#$B,d1
+		add.b	width_pixels(a0),d1
 		moveq	#0,d2
 		move.b	height_pixels(a0),d2
 		move.w	d2,d3

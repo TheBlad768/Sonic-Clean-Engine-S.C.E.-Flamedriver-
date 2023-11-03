@@ -199,7 +199,7 @@ Song_Fade_Transition_Wait:
 		bpl.s	Song_Fade_Transition_Return
 		move.b	subtype(a0),d0
 		move.w	d0,(Current_music).w
-		jsr	(Play_Music).w	; play music
+		jsr	(Play_Music).w		; play music
 		jmp	(Delete_Current_Sprite).w
 
 ; =============== S U B R O U T I N E =======================================
@@ -431,6 +431,7 @@ Restore_PlayerControl2:
 
 StartNewLevel:
 		move.w	d0,(Current_zone_and_act).w
+		move.w	d0,(Apparent_zone_and_act).w
 		st	(Restart_level_flag).w
 		clr.b	(Last_star_post_hit).w
 

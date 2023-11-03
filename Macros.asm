@@ -22,7 +22,7 @@ ramaddr function x,(-(x&$80000000)<<1)|x
 id function ptr,((ptr-offset)/ptrsize+idstart)
 
 ; function to convert two separate nibble into a byte
-nibble_to_byte function nibble1,nibble2,((nibble1)&$F0)|((nibble2)&$F)
+nibbles_to_byte function nibble1,nibble2,((nibble1)&$F0)|((nibble2)&$F)
 
 ; function to convert two separate bytes into a word
 bytes_to_word function byte1,byte2,(((byte1)<<8)&$FF00)|((byte2)&$FF)
@@ -120,10 +120,10 @@ locVRAM:	macro loc,controlport
     endm
 
 ; macro for a debug object list header
-; must be on the same line as a label that has a corresponding _End label later
+; must be on the same line as a label that has a corresponding _end label later
 dbglistheader macro {INTLABEL}
 __LABEL__ label *
-	dc.w ((__LABEL___End - __LABEL__ - 2) / $A)
+	dc.w ((__LABEL___end - __LABEL__ - 2) / $A)
     endm
 
 ; macro to define debug list object data
@@ -685,7 +685,7 @@ zoneanimcur := "__LABEL__"
 watertransheader macro {INTLABEL}
 __LABEL__ label *
 ; Number of entries in list minus one
-	dc.w (((__LABEL___End - __LABEL__ - 2) / 2) - 1)
+	dc.w (((__LABEL___end - __LABEL__ - 2) / 2) - 1)
 	endm
 
 zoneanimend macro
@@ -821,11 +821,11 @@ mappingsTableEntry macro ptr
 spriteHeader macro {INTLABEL}
 __LABEL__ label *
 	if SonicMappingsVer==1
-	dc.b ((__LABEL___End - __LABEL__ - 1) / 5)
+	dc.b ((__LABEL___end - __LABEL__ - 1) / 5)
 	elseif SonicMappingsVer==2
-	dc.w ((__LABEL___End - __LABEL__ - 2) / 8)
+	dc.w ((__LABEL___end - __LABEL__ - 2) / 8)
 	else
-	dc.w ((__LABEL___End - __LABEL__ - 2) / 6)
+	dc.w ((__LABEL___end - __LABEL__ - 2) / 6)
 	endif
     endm
 
@@ -870,11 +870,11 @@ spritePiece2P macro xpos,ypos,width,height,tile,xflip,yflip,pal,pri,tile2,xflip2
 dplcHeader macro {INTLABEL}
 __LABEL__ label *
 	if SonicMappingsVer==1
-	dc.b ((__LABEL___End - __LABEL__ - 1) / 2)
+	dc.b ((__LABEL___end - __LABEL__ - 1) / 2)
 	elseif SonicMappingsVer==2
-	dc.w ((__LABEL___End - __LABEL__ - 2) / 2)
+	dc.w ((__LABEL___end - __LABEL__ - 2) / 2)
 	else
-	dc.w ((__LABEL___End - __LABEL__ - 4) / 2)
+	dc.w ((__LABEL___end - __LABEL__ - 4) / 2)
 	endif
     endm
 
@@ -890,7 +890,7 @@ dplcEntry macro tiles,offset
 ; So to avoid having to set and reset SonicMappingsVer I'll just make special macros
 s3kPlayerDplcHeader macro {INTLABEL}
 __LABEL__ label *
-	dc.w ((__LABEL___End - __LABEL__ - 2) / 2)
+	dc.w ((__LABEL___end - __LABEL__ - 2) / 2)
     endm
 
 s3kPlayerDplcEntry macro tiles,offset
@@ -1081,7 +1081,7 @@ offsetEntry macro ptr
     endm
 ; ---------------------------------------------------------------------------
 
-dScroll_Header  macro {INTLABEL}
+dScroll_Header macro {INTLABEL}
 __LABEL__ label *
 	dc.w (((__LABEL___end - __LABEL__Plc) / 6) - 1)
 __LABEL__Plc:
@@ -1118,13 +1118,13 @@ levselstr macro str
 ; Codepage for level select
 	save
 	codepage LEVELSCREEN
-	CHARSET ' ', 51
-	CHARSET '0','9', 8
-	CHARSET 'A','Z', 25
-	CHARSET 'a','z', 25
-	CHARSET '*', 18
-	CHARSET ':', 20
-	CHARSET '-', 21
-	CHARSET '.', 22
-	CHARSET '/', 23
+	CHARSET ' ', $2C
+	CHARSET '0','9', 1
+	CHARSET 'A','Z', $12
+	CHARSET 'a','z', $12
+	CHARSET '*', $B
+	CHARSET ':', $D
+	CHARSET '-', $E
+	CHARSET '.', $F
+	CHARSET '/', $10
 	restore

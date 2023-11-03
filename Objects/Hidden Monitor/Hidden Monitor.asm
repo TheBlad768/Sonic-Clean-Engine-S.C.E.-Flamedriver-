@@ -54,7 +54,7 @@ loc_83760:
 		move.b	#2,routine(a0)
 		move.b	#4,objoff_3C(a0)
 		move.w	#-$500,y_vel(a0)
-		sfx	sfx_BubbleShield
+		sfx	sfx_BubbleAttack
 		bclr	#0,render_flags(a0)
 		beq.s	loc_83798
 		bset	#7,art_tile(a0)
@@ -68,7 +68,7 @@ word_8379E:		dc.w  -$E, $1C, -$80, $C0
 
 ObjDat_HiddenMonitor:
 		dc.l Map_Monitor
-		dc.w make_art_tile(ArtTile_Powerups,0,0)
+		dc.w make_art_tile(ArtTile_Monitors,0,0)
 		dc.w $280
 		dc.b 28/2
 		dc.b 32/2

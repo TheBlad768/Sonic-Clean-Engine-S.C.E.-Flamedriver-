@@ -37,7 +37,7 @@ Obj_Fire_Shield:
 		lea	(Player_1).w,a2
 		btst	#Status_Invincible,status_secondary(a2)					; is player invincible?
 		bne.w	.return											; if so, do not display and do not update variables
-		cmpi.b	#id_Null,anim(a2)								; is player in their 'blank' animation?
+		cmpi.b	#id_Blank,anim(a2)								; is player in their 'blank' animation?
 		beq.w	.return											; if so, do not display and do not update variables
 		btst	#Status_Shield,status_secondary(a2) 					; should the player still have a shield?
 		beq.w	.destroy											; if not, change to Insta-Shield
@@ -120,7 +120,7 @@ Obj_Lightning_Shield:
 		lea	(Player_1).w,a2
 		btst	#Status_Invincible,status_secondary(a2)					; is player invincible?
 		bne.w	.return											; if so, do not display and do not update variables
-		cmpi.b	#id_Null,anim(a2)								; is player in their 'blank' animation?
+		cmpi.b	#id_Blank,anim(a2)								; is player in their 'blank' animation?
 		beq.w	.return											; if so, do not display and do not update variables
 		btst	#Status_Shield,status_secondary(a2)						; should the player still have a shield?
 		beq.s	.destroy											; if not, change to Insta-Shield
@@ -292,7 +292,7 @@ Obj_Bubble_Shield:
 		lea	(Player_1).w,a2
 		btst	#Status_Invincible,status_secondary(a2)					; is player invincible?
 		bne.s	.return											; if so, do not display and do not update variables
-		cmpi.b	#id_Null,anim(a2)								; is player in their 'blank' animation?
+		cmpi.b	#id_Blank,anim(a2)								; is player in their 'blank' animation?
 		beq.s	.return											; if so, do not display and do not update variables
 		btst	#Status_Shield,status_secondary(a2)						; should the player still have a shield?
 		beq.s	.destroy											; if not, change to Insta-Shield
@@ -508,8 +508,10 @@ Obj_188E8:
 		beq.w	Delete_Current_Sprite								; if not, delete
 		lea	(Pos_table_index).w,a5
 		lea	(Pos_table).w,a6
+		moveq	#0,d1
 		move.b	objoff_36(a0),d1
-		lsl.b	#2,d1
+		add.b	d1,d1
+		add.b	d1,d1
 		move.w	d1,d2
 		add.w	d1,d1
 		add.w	d2,d1
@@ -572,11 +574,11 @@ sub_1898A:
 
 off_187DE:
 		dc.l byte_189ED
-		dc.w $B
+		dc.b 0, $B
 		dc.l byte_18A02
-		dc.w $160D
+		dc.b $16, $D
 		dc.l byte_18A1B
-		dc.w $2C0D
+		dc.b $2C, $D
 word_189A0:
 		dc.w   $F00,  $F03,  $E06,  $D08,  $B0B,  $80D,	 $60E,	$30F,	$10, $FC0F, $F90E, $F70D, $F40B, $F208,	$F106, $F003
 		dc.w  $F000, $F0FC, $F1F9, $F2F7, $F4F4, $F7F2,	$F9F1, $FCF0, $FFF0,  $3F0,  $6F1,  $8F2,  $BF4,  $DF7,	 $EF9,	$FFC

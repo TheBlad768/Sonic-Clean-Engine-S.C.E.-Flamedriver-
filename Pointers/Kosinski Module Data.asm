@@ -16,7 +16,7 @@ ArtKosM_BossExplosion:			binclude "Objects/Explosion/KosinskiM Art/Boss Explosio
 	even
 ArtKosM_Explosion:				binclude "Objects/Explosion/KosinskiM Art/Explosion.bin"
 	even
-ArtKosM_Lamp:					binclude "Objects/StarPost/KosinskiM Art/Enemy points.bin"
+ArtKosM_EnemyPtsStarPost:		binclude "Objects/StarPost/KosinskiM Art/Enemy points.bin"
 	even
 ArtKosM_GrayButton:				binclude "Objects/Button/KosinskiM Art/Gray Button.bin"
 	even
@@ -29,6 +29,8 @@ ArtKosM_WaterWave:				binclude "Objects/Water Wave/KosinskiM Art/Water Wave.bin"
 ArtKosM_EggCapsule:				binclude "Objects/Egg Capsule/KosinskiM Art/Egg Capsule.bin"
 	even
 ArtKosM_Seal:					binclude "Objects/Animals/KosinskiM Art/Seal.bin"
+	even
+ArtKosM_Pig:					binclude "Objects/Animals/KosinskiM Art/Pig.bin"
 	even
 ArtKosM_BlueFlicky:				binclude "Objects/Animals/KosinskiM Art/Blue Flicky.bin"
 	even

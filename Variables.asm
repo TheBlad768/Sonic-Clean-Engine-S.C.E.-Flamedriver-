@@ -103,7 +103,7 @@ Plane_double_update_flag:				ds.w 1					; Set when two block are to be updated i
 HScroll_Shift:						= *
 Camera_Hscroll_shift:					ds.w 3
 	if ExtendedCamera
-Camera_X_Center:					ds.w 1
+Camera_X_center:					ds.w 1
 	endif
 Screen_X_wrap_value:				ds.w 1					; Set to $FFFF
 Screen_Y_wrap_value:					ds.w 1					; Either $7FF or $FFF
@@ -180,8 +180,6 @@ v_pfade_size:							= *
 Palette_fade_count:					ds.b 1					; The number of colours to fade
 
 Lag_frame_count:						ds.w 1					; More specifically, the number of times V-int routine 0 has run. Reset at the end of a normal frame
-v_spritecount:						= *
-Sprites_drawn:						ds.w 1					; Used to ensure the sprite limit isn't exceeded
 v_vdp_buffer2:						= *
 DMA_data_thunk:					= *						; Used as a RAM holder for the final DMA command word. Data will NOT be preserved across V-INTs, so consider this space reserved
 DMA_trigger_word:					ds.w 1					; Transferred from RAM to avoid crashing the Mega Drive
@@ -189,6 +187,8 @@ f_hbla_pal:							= *
 H_int_flag:							ds.b 1					; Unless this is set H-int will return immediately
 Do_Updates_in_H_int:				ds.b 1					; If this is set Do_Updates will be called from H-int instead of V-int
 WindTunnel_flag:						ds.b 1
+									ds.b 1					; even
+Disable_death_plane:					ds.b 1					; if set, going below the screen wont kill the player
 f_lockctrl:							= *
 Ctrl_1_locked:						ds.b 1
 v_framecount:						= *
@@ -199,7 +199,8 @@ f_pause:								= *
 Game_paused:						ds.b 1
 f_restart:							= *
 Restart_level_flag:					ds.b 1
-									ds.b 1					; even
+v_spritecount:						= *
+Sprites_drawn:						ds.b 1					; Used to ensure the sprite limit isn't exceeded
 Sonic_Knux_top_speed:				ds.w 1
 Sonic_Knux_acceleration:				ds.w 1
 Sonic_Knux_deceleration:				ds.w 1
@@ -214,7 +215,7 @@ Player_prev_frame:					ds.b 1
 Reverse_gravity_flag:					ds.b 1
 Primary_Angle:						ds.b 1
 Secondary_Angle:						ds.b 1
-Deform_lock:						ds.b 1
+Deform_lock:							ds.b 1
 Boss_flag:							ds.b 1					; Set if a boss fight is going on
 TitleCard_end_flag:					ds.b 1
 LevResults_end_flag:					ds.b 1
@@ -270,7 +271,7 @@ Last_star_pole_hit:					ds.b 1
 Current_music:						ds.w 1
 Palette_fade_timer:					ds.w 1					; The palette gets faded in until this timer expires
 SegaCD_Mode:						ds.b 1
-									ds.b 1					; even
+Respawn_table_keep:					ds.b 1					; If set, respawn table is not reset during level load
 
 Block_table_addr_ROM:				ds.l 1					; Block table pointer(Block (16x16) definitions, 8 bytes per definition)
 Level_layout_addr_ROM:				ds.l 1					; Level layout pointer

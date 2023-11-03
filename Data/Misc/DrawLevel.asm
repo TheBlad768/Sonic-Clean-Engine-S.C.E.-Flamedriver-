@@ -438,6 +438,7 @@ Refresh_PlaneTileDeform:
 		addi.w	#$10,d0
 		dbf	d3,-
 		rts
+
 ; ---------------------------------------------------------------------------
 ; Refresh Foreground
 ; ---------------------------------------------------------------------------
@@ -468,6 +469,7 @@ Refresh_PlaneDirect:
 		dbf	d2,-
 		enableInts
 		rts
+
 ; ---------------------------------------------------------------------------
 ; Refresh Background
 ; ---------------------------------------------------------------------------
@@ -893,6 +895,7 @@ Restart_LevelData:
 		move.l	#Load_Sprites_Init,(Object_load_addr_RAM).w
 		move.l	#Load_Rings_Init,(Rings_manager_addr_RAM).w
 		clr.b	(Boss_flag).w
+		clr.b	(Respawn_table_keep).w
 		bsr.s	Clear_Switches
 		bsr.w	Load_Level
 		bsr.w	Load_Solids
@@ -921,8 +924,10 @@ Reset_ObjectsPosition2:
 ; ---------------------------------------------------------------------------
 
 Reset_ObjectsPosition:
-		sub.w	d1,(Player_1+y_pos).w
 		move.w	(Camera_X_pos).w,d0
+
+Reset_ObjectsPosition4:
+		sub.w	d1,(Player_1+y_pos).w
 		sub.w	d0,(Player_1+x_pos).w
 		sub.w	d0,(Camera_X_pos).w
 		sub.w	d1,(Camera_Y_pos).w
@@ -956,7 +961,6 @@ Offset_ObjectsDuringTransition:
 ; =============== S U B R O U T I N E =======================================
 
 Change_ActSizes:
-		moveq	#0,d0
 		move.w	(Current_zone_and_act).w,d0
 		ror.b	#2,d0
 		lsr.w	#3,d0
@@ -973,7 +977,6 @@ Change_ActSizes:
 ; =============== S U B R O U T I N E =======================================
 
 LoadLevelLoadBlock:
-		moveq	#0,d0
 		move.w	(Current_zone_and_act).w,d0
 		ror.b	#2,d0
 		lsr.w	#4,d0
@@ -1000,7 +1003,6 @@ LoadLevelLoadBlock:
 ; =============== S U B R O U T I N E =======================================
 
 LoadLevelLoadBlock2:
-		moveq	#0,d0
 		move.w	(Current_zone_and_act).w,d0
 		ror.b	#2,d0
 		lsr.w	#4,d0
@@ -1025,7 +1027,6 @@ LoadLevelLoadBlock2:
 ; =============== S U B R O U T I N E =======================================
 
 Load_Level:
-		moveq	#0,d0
 		move.w	(Current_zone_and_act).w,d0
 		ror.b	#2,d0
 		lsr.w	#4,d0
@@ -1041,7 +1042,6 @@ Load_Level2:
 ; =============== S U B R O U T I N E =======================================
 
 LoadLevelPointer:
-		moveq	#0,d0
 		move.w	(Current_zone_and_act).w,d0
 		ror.b	#2,d0
 		lsr.w	#3,d0
@@ -1065,7 +1065,6 @@ LoadLevelPointer:
 ; =============== S U B R O U T I N E =======================================
 
 Load_Solids:
-		moveq	#0,d0
 		move.w	(Current_zone_and_act).w,d0
 		ror.b	#2,d0
 		lsr.w	#4,d0

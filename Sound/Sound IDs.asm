@@ -21,7 +21,7 @@ mus_SEGA =				$FF			; $FF - Play SEGA sound
 ; Music ID's list. These do not affect the sound driver, be careful.
 
 	phase $01
-Mus__First =				*			; ID of the first music
+mus__First =				*			; ID of the first music
 
 ; Levels
 mus_DEZ1				ds.b 1		; $01
@@ -37,7 +37,7 @@ mus_Drowning			ds.b 1		; $06
 
 mus_ExtraLife			= $00		; not used
 
-Mus__End =				*			; next ID after last music
+mus__End =				*			; next ID after last music
 
 	dephase
 

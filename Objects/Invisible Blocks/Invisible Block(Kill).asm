@@ -8,7 +8,7 @@
 
 Obj_Invisible_KillBlock:
 		move.l	#Map_InvisibleBlock,mappings(a0)
-		move.w	#make_art_tile(ArtTile_Powerups,0,1),art_tile(a0)
+		move.w	#make_art_tile(ArtTile_Monitors,0,1),art_tile(a0)
 		ori.b	#4,render_flags(a0)
 		move.w	#$200,priority(a0)
 		bset	#7,status(a0)
@@ -41,9 +41,8 @@ loc_1F600:
 		move.l	#loc_1F606,address(a0)
 
 loc_1F606:
-		moveq	#0,d1
-		move.b	width_pixels(a0),d1
-		addi.w	#$B,d1
+		moveq	#$B,d1
+		add.b	width_pixels(a0),d1
 		moveq	#0,d2
 		move.b	height_pixels(a0),d2
 		move.w	d2,d3
@@ -67,9 +66,8 @@ loc_1F64A:
 ; ---------------------------------------------------------------------------
 
 loc_1F66C:
-		moveq	#0,d1
-		move.b	width_pixels(a0),d1
-		addi.w	#$B,d1
+		moveq	#$B,d1
+		add.b	width_pixels(a0),d1
 		moveq	#0,d2
 		move.b	height_pixels(a0),d2
 		move.w	d2,d3
@@ -93,9 +91,8 @@ loc_1F6AE:
 ; ---------------------------------------------------------------------------
 
 loc_1F6D0:
-		moveq	#0,d1
-		move.b	width_pixels(a0),d1
-		addi.w	#$B,d1
+		moveq	#$B,d1
+		add.b	width_pixels(a0),d1
 		moveq	#0,d2
 		move.b	height_pixels(a0),d2
 		move.w	d2,d3
