@@ -110,9 +110,11 @@ Set_IndexedVelocity:
 		add.w	d1,d0
 		move.l	Obj_VelocityIndex(pc,d0.w),x_vel(a0)
 		btst	#0,render_flags(a0)
-		beq.s	+
+		beq.s	.return
 		neg.w	x_vel(a0)
-+		rts
+
+.return
+		rts
 ; ---------------------------------------------------------------------------
 
 Obj_VelocityIndex:
@@ -158,17 +160,16 @@ Obj_VelocityIndex:
 ; =============== S U B R O U T I N E =======================================
 
 Displace_PlayerOffObject:
-		move.b	status(a0),d0
-		andi.b	#$18,d0
-		beq.s	Displace_PlayerOffObject_Return
-		bclr	#Status_OnObj,status(a0)
-		beq.s	+
+		moveq	#$18,d0
+		and.b	status(a0),d0								; is Sonic or Tails standing on the object?
+		beq.s	.return									; if not, branch
+		bclr	#p1_standing_bit,status(a0)
+		beq.s	.return
 		lea	(Player_1).w,a1
 		bclr	#Status_OnObj,status(a1)
 		bset	#Status_InAir,status(a1)
-+		bclr	#Status_RollJump,status(a0)
 
-Displace_PlayerOffObject_Return:
+.return
 		rts
 
 ; =============== S U B R O U T I N E =======================================
@@ -177,10 +178,12 @@ Go_CheckPlayerRelease:
 		movem.l	d7-a0/a2-a3,-(sp)
 		lea	(Player_1).w,a1
 		btst	#Status_OnObj,status(a1)
-		beq.s	+
+		beq.s	.notp1
 		movea.w	interact(a1),a0
 		bsr.w	CheckPlayerReleaseFromObj
-+		movem.l	(sp)+,d7-a0/a2-a3
+
+.notp1
+		movem.l	(sp)+,d7-a0/a2-a3
 		rts
 
 ; =============== S U B R O U T I N E =======================================
@@ -198,7 +201,7 @@ Song_Fade_Transition_Wait:
 		subq.w	#1,$2E(a0)
 		bpl.s	Song_Fade_Transition_Return
 		move.b	subtype(a0),d0
-		move.w	d0,(Current_music).w
+		move.b	d0,(Current_music+1).w
 		jsr	(Play_Music).w		; play music
 		jmp	(Delete_Current_Sprite).w
 
@@ -229,9 +232,11 @@ Restore_LevelMusic:
 		move.b	(a2,d0.w),d0
 		move.w	d0,(Current_music).w
 		btst	#Status_Invincible,(Player_1+status_secondary).w
-		beq.s	+
+		beq.s	.play
 		moveq	#signextendB(mus_Invincible),d0	; if invincible, play invincibility music
-+		jmp	(Play_Music).w						; play music
+
+.play
+		jmp	(Play_Music).w						; play music
 
 ; =============== S U B R O U T I N E =======================================
 

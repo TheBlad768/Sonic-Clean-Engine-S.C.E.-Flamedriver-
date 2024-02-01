@@ -274,7 +274,7 @@ off_1D87C: offsetTable
 		offsetTableEntry.w Monitor_Give_Eggman			; 2
 		offsetTableEntry.w Monitor_Give_Eggman			; 4
 		offsetTableEntry.w Monitor_Give_Rings				; 6
-		offsetTableEntry.w Monitor_Give_Super_Sneakers		; 8
+		offsetTableEntry.w Monitor_Give_SpeedShoes			; 8
 		offsetTableEntry.w Monitor_Give_Fire_Shield			; A
 		offsetTableEntry.w Monitor_Give_Lightning_Shield	; C
 		offsetTableEntry.w Monitor_Give_Bubble_Shield		; E
@@ -292,12 +292,12 @@ Monitor_Give_Rings:
 		sfx	sfx_RingRight,1						; play ring sound
 ; ---------------------------------------------------------------------------
 
-Monitor_Give_Super_Sneakers:
+Monitor_Give_SpeedShoes:
 		bset	#Status_SpeedShoes,status_secondary(a1)
 		move.b	#150,speed_shoes_timer(a1)
-		move.w	#$C00,(Sonic_Knux_top_speed).w
-		move.w	#$18,(Sonic_Knux_acceleration).w
-		move.w	#$80,(Sonic_Knux_deceleration).w
+		move.w	#$C00,(Max_speed).w
+		move.w	#$18,(Acceleration).w
+		move.w	#$80,(Deceleration).w
 		moveq	#8,d0
 		jmp	(Change_Music_Tempo).w				; speed up the music
 ; ---------------------------------------------------------------------------
