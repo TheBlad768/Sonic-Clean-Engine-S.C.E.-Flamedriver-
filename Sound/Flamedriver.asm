@@ -2415,15 +2415,18 @@ zPauseUnpause:
 .unpause:
 		xor	a								; a = 0
 		ld	(hl), a							; Clear pause flag
-		ld	a, (zFadeOutTimeout)			; Get fade timeout
+		ld	(zContinuousSFX), a				; Clear continuous SFX ID
+		ld	(zContinuousSFXFlag), a			; Clear continuous SFX flag
+		ld	(zContSFXLoopCnt), a				; Clear continuous SFX counter
+		ld	a, (zFadeOutTimeout)				; Get fade timeout
 		or	a								; Is it zero?
 		jp	nz, zMusicFade					; Stop all music if not
-		ld	ix, zSongFM1					; Start with FM1 track
+		ld	ix, zSongFM1						; Start with FM1 track
 		ld	b, zNumMusicFMTracks			; Number of FM tracks
 		ld	a, (zDACEnable)					; Get DAC enable
 		or	a								; Is it supposed to be on?
 		jr	z, .fm_loop						; Branch if not
-		ld	ix, zSongDAC					; Start with DAC instead
+		ld	ix, zSongDAC						; Start with DAC instead
 
 .fm_loop:
 		ld	a, (zHaltFlag)					; Get halt flag

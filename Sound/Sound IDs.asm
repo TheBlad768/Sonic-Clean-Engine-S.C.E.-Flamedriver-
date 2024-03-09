@@ -4,6 +4,7 @@
 
 	phase $E1
 mus__FirstCmd =			*			; ID of the first sound command
+mus_Fade =				*			; $E1 - fade out music
 mus_FadeOut			ds.b 1		; $E1 - fade out music
 mus_Stop				ds.b 1		; $E2 - stop music and sound effects
 mus_MutePSG			ds.b 1		; $E3 - mute all PSG channels

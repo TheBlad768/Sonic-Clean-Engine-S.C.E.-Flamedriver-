@@ -30,7 +30,7 @@ IF EXIST Sonic.h del Sonic.h
 IF NOT EXIST Sonic.gen pause & exit
 
 REM // generate debug information
-"Win32/convsym.exe" Sonic.lst Sonic.gen -a -input as_lst
+"Win32/convsym.exe" Sonic.lst Sonic.gen -a -input as_lst -exclude -filter "z[A-Z].+"
 
 REM // "Win32/rompad.exe" Sonic.gen 255 0
 
