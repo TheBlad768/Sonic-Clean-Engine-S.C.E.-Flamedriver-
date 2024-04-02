@@ -39,9 +39,12 @@ TouchResponse:
 		move.b	y_radius(a0),d5							; load Sonic's height
 		subq.b	#3,d5
 		sub.w	d5,d3
+		cmpi.b	#id_Duck,anim(a0)						; is player ducking?
+		bne.s	.Touch_NoDuck							; if not, branch
+		addi.w	#$C,d3
+		moveq	#$A,d5
 
-		; note the lack of a check for if the player is ducking
-		; height is no longer reduced by ducking
+.Touch_NoDuck
 		moveq	#$10,d4									; player's collision width
 		add.w	d5,d5
 
@@ -104,10 +107,10 @@ Touch_Height:
 
 ; ---------------------------------------------------------------------------
 ; collision sizes $00-$3F (width,height)
-; $00-$3F	- Touch
-; $40-$7F	- Ring/Monitor
-; $80-$BF	- Enemy(Hurt)
-; $C0-$FF	- Special
+; $00-$3F	- touch collision
+; $40-$7F	- ring/monitor collision
+; $80-$BF	- enemy(hurt) collision
+; $C0-$FF	- special collision
 ; ---------------------------------------------------------------------------
 
 Touch_Sizes:
@@ -184,8 +187,10 @@ Touch_ChkValue:
 		and.b	collision_flags(a1),d0						; get collision_flags
 		cmpi.b	#6,d0									; is touch response $46 ?
 		beq.s	Touch_Monitor							; if yes, branch
+
+		; touch ring
 		move.b	(Player_1+invulnerability_timer).w,d0		; get the main character's invulnerability_timer
-		cmpi.b	#90,d0									; is there more than 90 frames on the timer remaining?
+		cmpi.b	#(1*60)+30,d0							; is there more than 90 frames on the timer remaining?
 		bhs.s	.locret									; if so, branch
 		move.b	#4,routine(a1)							; set target object's routine to 4 (must be reserved for collision response)
 
@@ -256,7 +261,7 @@ Touch_Monitor:
 
 		; okaytodestroy
 		neg.w	y_vel(a0)
-		move.b	#4,routine(a1)
+		move.l	#Obj_MonitorBreak,address(a1)
 		rts
 ; ---------------------------------------------------------------------------
 
@@ -297,7 +302,8 @@ Touch_Enemy:
 		; boss related? could be special enemies in general
 		tst.b	boss_hitcount2(a1)
 		beq.s	Touch_EnemyNormal
-		neg.l	x_vel(a0)								; bounce player directly off boss
+		neg.w	x_vel(a0)								; bounce player directly off boss
+		neg.w	y_vel(a0)
 		neg.w	ground_vel(a0)
 		move.b	collision_flags(a1),collision_restore_flags(a1)	; save current collision
 		clr.b	collision_flags(a1)
@@ -336,7 +342,6 @@ Touch_EnemyNormal:
 .notreachedlimit2
 		bsr.w	HUD_AddToScore
 		move.l	#Obj_Explosion,address(a1)				; change object to explosion
-		clr.b	routine(a1)
 		tst.w	y_vel(a0)
 		bmi.s	.bouncedown
 		move.w	y_pos(a0),d0

@@ -5,7 +5,7 @@
 ; =============== S U B R O U T I N E =======================================
 
 Obj_LevelResults:
-		music	mus_FadeOut						; fade out music
+		music	mus_Fade							; fade out music
 
 		; load general art
 		lea	(ArtKosM_ResultsGeneral).l,a1
