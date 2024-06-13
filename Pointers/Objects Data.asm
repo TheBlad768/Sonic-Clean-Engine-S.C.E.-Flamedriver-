@@ -14,7 +14,7 @@
 		include "Objects/Invisible Blocks/Invisible Block(Kill).asm"
 		include "Objects/Title Card/Title Card.asm"
 		include "Objects/Signpost/Signpost.asm"
-		include "Objects/Results/LevelResults.asm"
+		include "Objects/Results/Results.asm"
 		include "Objects/Explosion/Boss Explosion.asm"
 		include "Objects/Explosion/Explosion.asm"
 		include "Objects/Bubbler/Bubbler.asm"
@@ -26,6 +26,7 @@
 		include "Objects/Egg Capsule/Egg Capsule.asm"
 		include "Objects/Smooth Palette/Smooth Palette.asm"
 		include "Objects/Sprite Mask/Sprite Mask.asm"
+		include "Objects/Start New Level/Start New Level.asm"
 
 ; ===========================================================================
 ; Levels objects data

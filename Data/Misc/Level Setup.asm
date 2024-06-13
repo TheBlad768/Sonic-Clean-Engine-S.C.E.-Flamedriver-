@@ -8,7 +8,7 @@
 ; a2 = Block address (.l)
 ; a3 = Layout address (.l)
 
-; Don't overwrite these registers!
+; don't overwrite these registers!
 
 ; =============== S U B R O U T I N E =======================================
 
@@ -20,7 +20,7 @@ Level_Setup:
 		move.w	(Camera_Y_pos).w,(Camera_Y_pos_copy).w
 		lea	(Plane_buffer).w,a0
 		movea.l	(Block_table_addr_ROM).w,a2
-		movea.l	(Level_layout2_addr_ROM).w,a3
+		movea.l	(Level_layout_addr2_ROM).w,a3
 		move.w	#vram_fg,d7
 		movea.l	(Level_data_addr_RAM.ScreenInit).w,a1
 		jsr	(a1)
@@ -39,7 +39,7 @@ Screen_Events:
 		move.w	(Camera_Y_pos).w,(Camera_Y_pos_copy).w
 		lea	(Plane_buffer).w,a0
 		movea.l	(Block_table_addr_ROM).w,a2
-		movea.l	(Level_layout2_addr_ROM).w,a3
+		movea.l	(Level_layout_addr2_ROM).w,a3
 		move.w	#vram_fg,d7
 		movea.l	(Level_data_addr_RAM.ScreenEvent).w,a1
 		jsr	(a1)

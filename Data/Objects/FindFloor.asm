@@ -19,8 +19,8 @@ loc_EC5A:
 		moveq	#3,d0
 		move.b	d0,(Primary_Angle).w
 		move.b	d0,(Secondary_Angle).w
-		move.b	angle(a0),d0
-		addi.b	#$20,d0
+		moveq	#$20,d0
+		add.b	angle(a0),d0
 		bpl.s	loc_EC7C
 		move.b	angle(a0),d0
 		bpl.s	loc_EC76
@@ -147,8 +147,8 @@ loc_ED74:
 ; ---------------------------------------------------------------------------
 
 loc_ED7A:
-		move.b	angle(a0),d2
-		addi.b	#$20,d2
+		moveq	#$20,d2
+		add.b	angle(a0),d2
 		andi.b	#$C0,d2
 		move.b	d2,angle(a0)
 		rts
@@ -378,19 +378,16 @@ GetFloorPosition:
 		move.w	d2,d0
 		lsr.w	#5,d0
 		and.w	(Layout_row_index_mask).w,d0
-		move.w	8(a1,d0.w),d0
-		andi.w	#$7FFF,d0
-		adda.w	d0,a1
 		move.w	d3,d1
 		lsr.w	#3,d1
 		move.w	d1,d4
 		lsr.w	#4,d1
+		add.w	8(a1,d0.w),d1
 		adda.w	d1,a1
-		moveq	#-1,d1
-		clr.w	d1
+		moveq	#-1,d1				; RAM_start (Chunk_table)
+		clr.w	d1					; d1 = $FFFF0000
 		move.b	(a1),d1
-		add.w	d1,d1
-		move.w	ChunkAddrArray(pc,d1.w),d1
+		lsl.w	#7,d1					; multiply by $80
 		move.w	d2,d0
 		andi.w	#$70,d0
 		add.w	d0,d1
@@ -398,20 +395,11 @@ GetFloorPosition:
 		add.w	d4,d1
 		movea.l	d1,a1
 		rts
-; ---------------------------------------------------------------------------
-
-ChunkAddrArray:
-
-		set	.a,0
-	rept 256
-		dc.w	 .a
-		set	.a,.a + $80
-	endr
 
 ; =============== S U B R O U T I N E =======================================
 
 FindFloor:
-		bsr.w	GetFloorPosition
+		bsr.s	GetFloorPosition
 		move.w	(a1),d0
 		move.w	d0,d4
 		andi.w	#$3FF,d0
@@ -788,6 +776,57 @@ loc_F60C:
 
 ; =============== S U B R O U T I N E =======================================
 
+sub_F6B4:
+		move.l	(Primary_collision_addr).w,(Collision_addr).w
+		cmpi.b	#$C,top_solid_bit(a0)
+		beq.s	+
+		move.l	(Secondary_collision_addr).w,(Collision_addr).w
++		move.b	lrb_solid_bit(a0),d5
+		move.l	x_pos(a0),d3
+		move.l	y_pos(a0),d2
+		move.w	x_vel(a0),d1
+		ext.l	d1
+		asl.l	#8,d1
+		add.l	d1,d3
+		move.w	y_vel(a0),d1
+		ext.l	d1
+		asl.l	#8,d1
+		add.l	d1,d2
+		swap	d2
+		swap	d3
+		move.b	d0,(Primary_Angle).w
+		move.b	d0,(Secondary_Angle).w
+		move.b	d0,d1
+		addi.b	#$20,d0
+		bpl.s	loc_F708
+		move.b	d1,d0
+		bpl.s	loc_F702
+		subq.b	#1,d0
+
+loc_F702:
+		addi.b	#$20,d0
+		bra.s	loc_F712
+; ---------------------------------------------------------------------------
+
+loc_F708:
+		move.b	d1,d0
+		bpl.s	loc_F70E
+		addq.b	#1,d0
+
+loc_F70E:
+		addi.b	#$1F,d0
+
+loc_F712:
+		andi.b	#$C0,d0
+		beq.w	sub_F828
+		cmpi.b	#$80,d0
+		beq.w	CheckCeilingDist_WithRadius
+		cmpi.b	#$40,d0
+		beq.w	sub_FDC8
+		bra.w	sub_FAA4
+
+; =============== S U B R O U T I N E =======================================
+
 CalcRoomInFront:
 		move.l	(Primary_collision_addr).w,(Collision_addr).w
 		cmpi.b	#$C,top_solid_bit(a0)
@@ -856,9 +895,10 @@ CalcRoomOverHead:
 		cmpi.b	#$40,d0
 		beq.w	CheckLeftCeilingDist
 		cmpi.b	#$80,d0
-		beq.w	Sonic_CheckCeiling
+		beq.w	Sonic_CheckCeiling2
 		cmpi.b	#$C0,d0
 		beq.w	CheckRightCeilingDist
+		bra.s	Sonic_CheckFloor2
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to check if Sonic/Tails is near the floor
@@ -948,6 +988,19 @@ loc_F81A:
 		beq.s	+
 		move.b	d2,d3
 +		rts
+
+; =============== S U B R O U T I N E =======================================
+
+sub_F828:
+		move.b	x_radius(a0),d0
+		ext.w	d0
+		add.w	d0,d2
+		lea	(Primary_Angle).w,a4
+		movea.w	#$10,a3
+		moveq	#0,d6
+		bsr.w	FindFloor
+		move.b	#0,d2
+		bra.s	loc_F81A
 
 ; =============== S U B R O U T I N E =======================================
 
@@ -1046,8 +1099,8 @@ ObjCheckFloorDist:
 ObjHitFloor2:
 ObjFloorDist2:
 ObjCheckFloorDist2:
-		move.w	y_pos(a0),d2			; Get object position
-		move.b	y_radius(a0),d0		; Get object height
+		move.w	y_pos(a0),d2			; get object position
+		move.b	y_radius(a0),d0		; get object height
 		ext.w	d0
 		add.w	d0,d2
 		lea	(Primary_Angle).w,a4
@@ -1162,11 +1215,28 @@ CheckRightWallDist_Part2:
 
 ; =============== S U B R O U T I N E =======================================
 
+sub_FAA4:
+		move.b	x_radius(a0),d0
+		ext.w	d0
+		add.w	d0,d3
+		lea	(Primary_Angle).w,a4
+		movea.w	#$10,a3
+		moveq	#0,d6
+		bsr.w	FindWall
+		move.b	#-$40,d2
+		bra.w	loc_F81A
+
+; =============== S U B R O U T I N E =======================================
+
 ; ObjHitWall:
 ObjHitWallRight:
 ObjCheckRightWallDist:
 		add.w	x_pos(a0),d3
+
+ObjCheckRightWallDist_Part2:
 		move.w	y_pos(a0),d2
+
+ObjCheckRightWallDist_Part3:
 		lea	(Primary_Angle).w,a4
 		clr.b	(a4)
 		movea.w	#$10,a3
@@ -1182,6 +1252,13 @@ ObjCheckRightWallDist:
 ; =============== S U B R O U T I N E =======================================
 
 Sonic_CheckCeiling:
+		move.l	(Primary_collision_addr).w,(Collision_addr).w
+		cmpi.b	#$C,top_solid_bit(a0)
+		beq.s	+
+		move.l	(Secondary_collision_addr).w,(Collision_addr).w
++		move.b	top_solid_bit(a0),d5
+
+Sonic_CheckCeiling2:
 		move.w	y_pos(a0),d2
 		move.w	x_pos(a0),d3
 		moveq	#0,d0
@@ -1271,7 +1348,7 @@ CheckCeilingDist_Part2:
 
 ; =============== S U B R O U T I N E =======================================
 
-sub_FBEE:
+CheckCeilingDist_WithRadius:
 		move.b	x_radius(a0),d0
 		ext.w	d0
 		sub.w	d0,d2
@@ -1294,6 +1371,8 @@ ObjCheckCeilingDist_Part2:
 
 ObjCheckCeilingDist_Part3:
 		move.w	y_pos(a0),d2
+
+ObjCheckCeilingDist_Part4:
 		moveq	#0,d0
 		move.b	y_radius(a0),d0
 		ext.w	d0
@@ -1444,6 +1523,20 @@ CheckLeftWallDist_Part2:
 
 ; =============== S U B R O U T I N E =======================================
 
+sub_FDC8:
+		move.b	x_radius(a0),d0
+		ext.w	d0
+		sub.w	d0,d3
+		eori.w	#$F,d3
+		lea	(Primary_Angle).w,a4
+		movea.w	#-$10,a3
+		move.w	#$400,d6
+		bsr.w	FindWall
+		move.b	#$40,d2
+		bra.w	loc_F81A
+
+; =============== S U B R O U T I N E =======================================
+
 sub_FDEC:
 		move.l	(Primary_collision_addr).w,(Collision_addr).w
 		cmpi.b	#$C,top_solid_bit(a0)
@@ -1477,6 +1570,8 @@ ObjCheckLeftWallDist:
 
 ObjCheckLeftWallDist_Part2:
 		move.w	y_pos(a0),d2
+
+ObjCheckLeftWallDist_Part3:
 		lea	(Primary_Angle).w,a4
 		clr.b	(a4)
 		movea.w	#-$10,a3

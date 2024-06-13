@@ -176,7 +176,7 @@ Obj_Spikebonker_SpikeBall:
 
 .highpriority
 		move.w	d1,priority(a0)
-		lea	(AngleLookup_1).w,a1
+		lea	(AngleLookup_1).l,a1
 		jsr	(MoveSprite_AngleXLookupOffset).w
 		jmp	(Child_DrawTouch_Sprite).w
 ; ---------------------------------------------------------------------------
@@ -207,20 +207,9 @@ Obj_Spikebonker_SpikeBall:
 
 ; =============== S U B R O U T I N E =======================================
 
-ObjDat_Spikebonker:
-		dc.l Map_Spikebonker
-		dc.w $8500
-		dc.w $280
-		dc.b 40/2
-		dc.b 40/2
-		dc.b 0
-		dc.b $1A
-ObjDat3_Spikebonker_SpikeBall:
-		dc.w $200
-		dc.b 32/2
-		dc.b 32/2
-		dc.b 1
-		dc.b $1A|$80
+ObjDat_Spikebonker:				subObjData Map_Spikebonker, $8500, $280, 40/2, 40/2, 0, $1A
+ObjDat3_Spikebonker_SpikeBall:	subObjData3 $200, 32/2, 32/2, 1, $1A|$80
+
 ChildObjDat_Spikebonker_Control:
 		dc.w 1-1
 		dc.l Obj_Spikebonker_Control

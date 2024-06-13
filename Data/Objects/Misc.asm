@@ -111,7 +111,7 @@ Perform_DPLC:
 Set_IndexedVelocity:
 		moveq	#0,d1
 		move.b	subtype(a0),d1
-		add.w	d1,d1
+		add.w	d1,d1						; multiply by 2
 		add.w	d1,d0
 		move.l	Obj_VelocityIndex(pc,d0.w),x_vel(a0)
 		btst	#0,render_flags(a0)
@@ -164,7 +164,26 @@ Obj_VelocityIndex:
 
 ; =============== S U B R O U T I N E =======================================
 
+Release_PlayerFromObject:
+
+		; clear push
+		moveq	#pushing_mask,d0
+		and.b	status(a0),d0										; is Sonic or Tails pushing the object?
+		beq.s	.return											; if not, branch
+		bclr	#p1_pushing_bit,status(a0)
+		beq.s	.return
+		lea	(Player_1).w,a1
+		bclr	#Status_Push,status(a1)
+		move.w	#bytes_to_word(id_Walk,id_Run),anim(a1)			; reset player anim
+
+.return
+		rts
+
+; =============== S U B R O U T I N E =======================================
+
 Displace_PlayerOffObject:
+
+		; clear standing
 		moveq	#standing_mask,d0
 		and.b	status(a0),d0										; is Sonic or Tails standing on the object?
 		beq.s	.return											; if not, branch
@@ -195,7 +214,7 @@ Go_CheckPlayerRelease:
 
 Obj_Song_Fade_Transition:
 		music	mus_FadeOut									; fade out music
-		move.w	#(2*60)-30,$2E(a0)
+		move.w	#(2*60)-30,objoff_2E(a0)
 		move.l	#Song_Fade_Transition_Wait,address(a0)
 
 Song_Fade_Transition_Return:
@@ -203,7 +222,7 @@ Song_Fade_Transition_Return:
 ; ---------------------------------------------------------------------------
 
 Song_Fade_Transition_Wait:
-		subq.w	#1,$2E(a0)
+		subq.w	#1,objoff_2E(a0)
 		bpl.s	Song_Fade_Transition_Return
 		move.b	subtype(a0),d0
 		move.b	d0,(Current_music+1).w
@@ -214,7 +233,7 @@ Song_Fade_Transition_Wait:
 
 Obj_Song_Fade_ToLevelMusic:
 		music	mus_FadeOut									; fade out music
-		move.w	#2*60,$2E(a0)
+		move.w	#2*60,objoff_2E(a0)
 		move.l	#Song_Fade_ToLevelMusic_Wait,address(a0)
 
 Song_Fade_ToLevelMusic_Return:
@@ -222,7 +241,7 @@ Song_Fade_ToLevelMusic_Return:
 ; ---------------------------------------------------------------------------
 
 Song_Fade_ToLevelMusic_Wait:
-		subq.w	#1,$2E(a0)
+		subq.w	#1,objoff_2E(a0)
 		bpl.s	Song_Fade_ToLevelMusic_Return
 		bsr.s	Restore_LevelMusic
 		jmp	(Delete_Current_Sprite).w
@@ -230,7 +249,7 @@ Song_Fade_ToLevelMusic_Wait:
 ; =============== S U B R O U T I N E =======================================
 
 Restore_LevelMusic:
-		lea	(Level_data_addr_RAM.Music).w,a2						; load music playlist
+		lea	(Level_data_addr_RAM.Music).w,a2						; load music
 		moveq	#0,d0
 		move.b	(a2),d0
 		move.w	d0,(Current_music).w
@@ -336,32 +355,33 @@ HurtCharacter_WithoutDamage:
 ; =============== S U B R O U T I N E =======================================
 
 Check_PlayerAttack:
-		btst	#Status_Invincible,status_secondary(a1)
-		bne.s	loc_85822
-		cmpi.b	#id_SpinDash,anim(a1)
-		beq.s	loc_85822
-		cmpi.b	#id_Roll,anim(a1)
-		beq.s	loc_85822
+		btst	#Status_Invincible,status_secondary(a1)					; is character invincible?
+		bne.s	.hit												; if so, branch
+		cmpi.b	#id_SpinDash,anim(a1)							; is player in their spin dash animation?
+		beq.s	.hit												; if so, branch
+		cmpi.b	#id_Roll,anim(a1)									; is player in their rolling animation?
+		beq.s	.hit												; if so, branch
+
+		; check player
 		moveq	#0,d0
 		move.b	character_id(a1),d0
 		add.w	d0,d0
-		move.w	off_857EA(pc,d0.w),d0
-		jmp	off_857EA(pc,d0.w)
+		jmp	.index(pc,d0.w)
 ; ---------------------------------------------------------------------------
 
-off_857EA: offsetTable
-		offsetTableEntry.w Check_SonicAttack	; 0 - Sonic
-		offsetTableEntry.w Check_SonicAttack	; 1 - Tails
-		offsetTableEntry.w Check_SonicAttack	; 2 - Knuckles
+.index
+		bra.s	.fail												; 0 - Sonic
+		bra.s	.fail												; 1 - Tails
+		bra.s	.fail												; 2 - Knuckles
 ; ---------------------------------------------------------------------------
 
-Check_SonicAttack:
-		moveq	#0,d0
+.hit
+		moveq	#1,d0											; player attack
 		rts
 ; ---------------------------------------------------------------------------
 
-loc_85822:
-		moveq	#1,d0
+.fail
+		moveq	#0,d0											; player doesn't attack
 		rts
 
 ; =============== S U B R O U T I N E =======================================
@@ -374,17 +394,13 @@ Check_PlayerCollision:
 		add.w	d0,d0
 		movea.w	.players(pc,d0.w),a1
 		move.w	a1,objoff_44(a0)
-		moveq	#1,d1
+		moveq	#1,d1											; set touch
 
 .return
 		rts
 ; ---------------------------------------------------------------------------
 
-.players
-		dc.w Player_1
-		dc.w Player_1
-		dc.w Player_1
-		dc.w Player_1
+.players	dc.w Player_1, Player_1, Player_1, Player_1
 
 ; =============== S U B R O U T I N E =======================================
 
@@ -410,9 +426,9 @@ Load_LevelResults:
 Set_PlayerEndingPose:
 		move.b	#$81,object_control(a1)
 		move.b	#id_Landing,anim(a1)
-		clr.b	spin_dash_flag(a1)
 		clr.l	x_vel(a1)
 		clr.w	ground_vel(a1)
+		clr.b	spin_dash_flag(a1)
 		bclr	#p1_pushing_bit,status(a0)
 		bclr	#p2_pushing_bit,status(a0)
 		bclr	#Status_Push,status(a1)
@@ -475,28 +491,28 @@ Play_SFX_Continuous:
 ; =============== S U B R O U T I N E =======================================
 
 Wait_NewDelay:
-		subq.w	#1,$2E(a0)
+		subq.w	#1,objoff_2E(a0)
 		bmi.s	.end
 		jmp	(Draw_Sprite).w
 ; ---------------------------------------------------------------------------
 
 .end
 		bclr	#7,render_flags(a0)
-		move.w	#(2*60)-1,$2E(a0)
+		move.w	#(2*60)-1,objoff_2E(a0)
 		movea.l	objoff_34(a0),a1
 		jmp	(a1)
 
 ; =============== S U B R O U T I N E =======================================
 
 Wait_FadeToLevelMusic:
-		subq.w	#1,$2E(a0)
+		subq.w	#1,objoff_2E(a0)
 		bmi.s	.end
 		jmp	(Draw_Sprite).w
 ; ---------------------------------------------------------------------------
 
 .end
 		bclr	#7,render_flags(a0)
-		move.w	#(2*60)-1,$2E(a0)
+		move.w	#(2*60)-1,objoff_2E(a0)
 		bsr.w	Create_New_Sprite
 		bne.s	.notfree
 		move.l	#Obj_Song_Fade_ToLevelMusic,address(a1)
@@ -509,15 +525,15 @@ Wait_FadeToLevelMusic:
 
 Player_IntroRightMove:
 		move.w	#bytes_to_word(btnR,btnR),d0						; set right move
-		tst.w	$2E(a0)
+		tst.w	objoff_2E(a0)
 		beq.s	.notjump
-		subq.w	#1,$2E(a0)
+		subq.w	#1,objoff_2E(a0)
 		move.w	#bytes_to_word(btnA+btnR,btnR),d0				; keep jumping
 
 .notjump
 		btst	#Status_Push,status(a1)								; player hitting a solid?
 		beq.s	.notpush											; if not, branch
-		move.w	#$1F,$2E(a0)
+		move.w	#$1F,objoff_2E(a0)
 		move.w	#bytes_to_word(btnA+btnR,btnA+btnR),d0			; set player jump
 
 .notpush
@@ -530,7 +546,7 @@ BossDefeated_StopTimer:
 		clr.b	(Update_HUD_timer).w
 
 BossDefeated:
-		move.w	#$3F,$2E(a0)
+		move.w	#$40-1,objoff_2E(a0)
 
 BossDefeated_NoTime:
 		bclr	#7,render_flags(a0)
@@ -591,22 +607,55 @@ CopyWordData_1:
 ; =============== S U B R O U T I N E =======================================
 
 Check_CameraXBoundary:
-		tst.w	x_vel(a0)
-		beq.s	+
-		bmi.s	++
 		move.w	(Camera_X_pos).w,d0
+
+.skipcam
+		tst.w	x_vel(a0)
+		beq.s	.return
+		bmi.s	.left
 		addi.w	#320-16,d0
 		cmp.w	x_pos(a0),d0
-		bhi.s	+
+		bhi.s	.return
 		clr.w	x_vel(a0)
-+		rts
+
+.return
+		rts
 ; ---------------------------------------------------------------------------
-+		move.w	(Camera_X_pos).w,d0
+
+.left
 		addi.w	#16,d0
 		cmp.w	x_pos(a0),d0
-		blo.s		+
+		blo.s		.return2
 		clr.w	x_vel(a0)
-+		rts
+
+.return2
+		rts
+
+; =============== S U B R O U T I N E =======================================
+
+Check_CameraXBoundary2:
+		move.w	(Camera_X_pos).w,d0
+
+.skipcam
+		tst.w	x_vel(a0)
+		bmi.s	.left
+		add.w	d2,d0
+		cmp.w	x_pos(a0),d0
+		bls.s		.setflipx
+		rts
+; ---------------------------------------------------------------------------
+
+.left
+		add.w	d1,d0
+		cmp.w	x_pos(a0),d0
+		blo.s		.return
+
+.setflipx
+		bchg	#0,render_flags(a0)
+		neg.w	x_vel(a0)
+
+.return
+		rts
 
 ; =============== S U B R O U T I N E =======================================
 

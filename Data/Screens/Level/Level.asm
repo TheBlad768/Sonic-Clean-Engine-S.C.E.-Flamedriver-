@@ -19,7 +19,7 @@ Level_VDP:
 
 Level_Screen:
 		bset	#GameModeFlag_TitleCard,(Game_mode).w								; set bit 7 is indicate that we're loading the level
-		music	mus_Fade														; fade out music
+		music	mus_FadeOut													; fade out music
 		jsr	(Clear_Kos_Module_Queue).w											; clear KosM PLCs
 		ResetDMAQueue															; clear DMA queue
 		jsr	(Pal_FadeToBlack).w
@@ -34,12 +34,12 @@ Level_Screen:
 		move.w	(Saved_apparent_zone_and_act).w,(Apparent_zone_and_act).w
 
 .nostarpost
-		clearRAM Object_RAM, Object_RAM_end
-		clearRAM Lag_frame_count, Lag_frame_count_end
-		clearRAM Camera_RAM, Camera_RAM_end
-		clearRAM Oscillating_variables, Oscillating_variables_end
+		clearRAM Object_RAM, Object_RAM_end									; clear the object RAM
+		clearRAM Lag_frame_count, Lag_frame_count_end							; clear variables
+		clearRAM Camera_RAM, Camera_RAM_end									; clear the camera RAM
+		clearRAM Oscillating_variables, Oscillating_variables_end						; clear variables
 		lea	Level_VDP(pc),a1
-		jsr	(Load_VDP).w
+		jsr	(Load_VDP).w														; a6 now has a VDP control address do not overwrite this register
 		jsr	(LoadLevelPointer).w													; load level data
 
 	if GameDebug
@@ -56,7 +56,7 @@ Level_Screen:
 	endif
 
 		move.w	#$8A00+255,(H_int_counter_command).w							; set palette change position (for water)
-		move.w	(H_int_counter_command).w,VDP_control_port-VDP_control_port(a6)
+		move.w	(H_int_counter_command).w,VDP_control_port-VDP_control_port(a6)	; warning: don't overwrite a6
 
 		; load player palette
 		moveq	#palid_Sonic,d0
@@ -72,10 +72,10 @@ Level_Screen:
 		clearRAM Water_palette_line_2, Normal_palette
 		tst.b	(Water_flag).w
 		beq.s	.notwater
-		move.w	#$8014,VDP_control_port-VDP_control_port(a6)						; H-int enabled
+		move.w	#$8014,VDP_control_port-VDP_control_port(a6)						; H-int enabled	; last use a6 here
 
 .notwater
-		lea	(Level_data_addr_RAM.Music).w,a1										; load music playlist
+		lea	(Level_data_addr_RAM.Music).w,a1										; load music
 		moveq	#0,d0
 		move.b	(a1),d0
 		move.w	d0,(Current_music).w
@@ -94,23 +94,24 @@ Level_Screen:
 		tst.w	(Kos_modules_left).w												; are there any items in the pattern load cue?
 		bne.s	.wait															; if yes, branch
 		disableInts
-		jsr	(HUD_DrawInitial).w
+		jsr	(HUD_DrawInitial).w													; init HUD
 		enableInts
 		jsr	(Get_LevelSizeStart).w
 		jsr	(DeformBgLayer).w
 		jsr	(LoadLevelLoadBlock).w
 		jsr	(LoadLevelLoadBlock2).w
 		disableInts
-		jsr	(Level_Setup).w
+		jsr	(Level_Setup).w														; draw level
 		enableInts
-		movea.l	(Level_data_addr_RAM.AnimateTilesInit).w,a0						; animate init
+		movea.l	(Level_data_addr_RAM.AnimateTilesInit).w,a0						; animate art init
 		jsr	(a0)
 		jsr	(Load_Solids).w
 		jsr	(Handle_Onscreen_Water_Height).w
 		moveq	#0,d0
 		move.w	d0,(Ctrl_1_logical).w
 		move.w	d0,(Ctrl_1).w
-		move.b	d0,(HUD_RAM.status).w
+		move.b	d0,(HUD_RAM.status).w											; clear HUD flag
+		move.b	d0,(Update_HUD_timer).w											; clear time counter update flag
 		tst.b	(Last_star_post_hit).w													; are you starting from a starpost?
 		bne.s	.starpost															; if yes, branch
 		move.w	d0,(Ring_count).w												; clear rings
@@ -155,7 +156,6 @@ Level_Screen:
 		jsr	(Process_Kos_Queue).w
 		jsr	(Wait_VSync).w
 		addq.w	#1,(Level_frame_counter).w
-		jsr	(Animate_Palette).w
 		jsr	(Load_Sprites).w
 		jsr	(Process_Sprites).w
 		tst.b	(Restart_level_flag).w
@@ -164,6 +164,7 @@ Level_Screen:
 		jsr	(Screen_Events).w
 		jsr	(Handle_Onscreen_Water_Height).w
 		jsr	(Load_Rings).w
+		jsr	(Animate_Palette).w
 		jsr	(Animate_Tiles).w
 		jsr	(Process_Kos_Module_Queue).w
 		jsr	(OscillateNumDo).w

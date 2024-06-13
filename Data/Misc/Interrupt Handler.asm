@@ -17,7 +17,9 @@ VInt:
 
 		move.l	#vdpComm($0000,VSRAM,WRITE),VDP_control_port-VDP_control_port(a5)
 		move.l	(V_scroll_value).w,VDP_data_port-VDP_data_port(a6)	; send screen ypos to VSRAM
-		btst	#6,(Graphics_flags).w
+
+		; detect PAL region consoles
+		btst	#0,(VDP_control_port-VDP_control_port)+1(a5)
 		beq.s	.notpal								; branch if it's not a PAL system
 		move.w	#$700,d0
 		dbf	d0,*										; otherwise, waste a bit of time here
@@ -47,6 +49,7 @@ ptr_VInt_Sega:		offsetTableEntry.w VInt_Sega		; 4
 ptr_VInt_Menu:		offsetTableEntry.w VInt_Menu		; 6
 ptr_VInt_Level:		offsetTableEntry.w VInt_Level		; 8
 ptr_VInt_Fade:		offsetTableEntry.w VInt_Fade		; A
+ptr_VInt_LevelSelect:	offsetTableEntry.w VInt_LevelSelect	; C
 
 ; ---------------------------------------------------------------------------
 ; Lag
@@ -58,21 +61,21 @@ VInt_Lag:
 		addq.w	#4,sp
 
 VInt_Lag_Main:
-		addq.b	#1,(Lag_frame_count).w
+		addq.w	#1,(Lag_frame_count).w
 
 		; branch if a level is running
-		cmpi.b	#GameModeID_TitleCard|id_LevelScreen,(Game_mode).w
-		beq.s	VInt_Lag_Level
-		cmpi.b	#id_LevelScreen,(Game_mode).w		; is game on a level?
-		beq.s	VInt_Lag_Level
-		bra.s	VInt_Done							; otherwise, return from V-int
-; ---------------------------------------------------------------------------
+		moveq	#$7C,d0								; limit Game Mode value to $7C max
+		and.b	(Game_mode).w,d0					; load Game Mode
+		cmpi.b	#id_LevelScreen,d0					; is game on a level?
+		bne.s	VInt_Done							; if not, return from V-int
 
 VInt_Lag_Level:
 		tst.b	(Water_flag).w
-		beq.w	VInt_Lag_NoWater
+		beq.s	VInt_Lag_NoWater
 		move.w	VDP_control_port-VDP_control_port(a5),d0
-		btst	#6,(Graphics_flags).w
+
+		; detect PAL region consoles
+		btst	#0,(VDP_control_port-VDP_control_port)+1(a5)
 		beq.s	.notpal								; branch if it isn't a PAL system
 		move.w	#$700,d0
 		dbf	d0,*										; otherwise waste a bit of time here
@@ -97,7 +100,9 @@ VInt_Lag_Water_Cont:
 
 VInt_Lag_NoWater:
 		move.w	VDP_control_port-VDP_control_port(a5),d0
-		btst	#6,(Graphics_flags).w
+
+		; detect PAL region consoles
+		btst	#0,(VDP_control_port-VDP_control_port)+1(a5)
 		beq.s	.notpal								; branch if it isn't a PAL system
 		move.w	#$700,d0
 		dbf	d0,*										; otherwise, waste a bit of time here
@@ -177,6 +182,30 @@ Do_ControllerPal:
 		rts
 
 ; ---------------------------------------------------------------------------
+; Level Select
+; ---------------------------------------------------------------------------
+
+; =============== S U B R O U T I N E =======================================
+
+VInt_LevelSelect:
+		stopZ80
+		stopZ802
+		jsr	(Poll_Controllers).w
+		startZ802
+		dma68kToVDP Normal_palette,$0000,$80,CRAM
+		dma68kToVDP Sprite_table_buffer,vram_sprites,$280,VRAM
+		dma68kToVDP H_scroll_buffer,vram_hscroll,(224<<2),VRAM
+		dma68kToVDP (vLevelSelect_buffer2),vram_fg,(256<<4),VRAM		; foreground buffer to VRAM
+		jsr	(Process_DMA_Queue).w
+		startZ80
+		tst.w	(Demo_timer).w						; is there time left on the demo?
+		beq.s	.return
+		subq.w	#1,(Demo_timer).w					; subtract 1 from time left
+
+.return
+		rts
+
+; ---------------------------------------------------------------------------
 ; Sega
 ; ---------------------------------------------------------------------------
 
@@ -225,7 +254,7 @@ VInt_Level:
 .copy
 		move.l	d0,VDP_data_port-VDP_data_port(a6)
 		dbf	d1,.copy	; fill entire palette with white
-		bra.w	VInt_Level_Cont
+		bra.s	VInt_Level_Cont
 ; ---------------------------------------------------------------------------
 
 VInt_Level_NoFlash:
@@ -266,7 +295,8 @@ VInt_Level_Cont:
 		dma68kToVDP H_scroll_buffer,vram_hscroll,(224<<2),VRAM
 		dma68kToVDP Sprite_table_buffer,vram_sprites,$280,VRAM
 		jsr	(Process_DMA_Queue).w
-		jsr	(VInt_DrawLevel).w
+		bsr.s	VInt_SpecialFunction
+		jsr	(VInt_DrawLevel.main).w
 		startZ80
 		enableInts
 		tst.b	(Water_flag).w
@@ -297,7 +327,43 @@ Do_Updates:
 		rts
 
 ; ---------------------------------------------------------------------------
-; Horizontal interrupt
+; Special function
+; ---------------------------------------------------------------------------
+
+; =============== S U B R O U T I N E =======================================
+
+VInt_SpecialFunction:
+		moveq	#0,d0
+		move.b	(Special_V_int_routine).w,d0
+		beq.s	.return												; if zero, branch
+		jmp	.index-2(pc,d0.w)
+; ---------------------------------------------------------------------------
+
+.index
+		bra.s	.vscrollon											; 2 (vertical scrolling on)
+		bra.s	.vscrollcopy											; 4 (vertical scrolling copy)
+; ---------------------------------------------------------------------------
+
+.vscrolloff															; 6 (vertical scrolling off)
+		move.w	#$8B03,VDP_control_port-VDP_control_port(a5)			; command $8B03 - VScroll full, HScroll line-based
+		clr.b	(Special_V_int_routine).w
+
+.return
+		rts
+; ---------------------------------------------------------------------------
+
+.vscrollon
+		move.w	#$8B07,VDP_control_port-VDP_control_port(a5)			; command $8B07 - VScroll cell-based, HScroll line-based
+		addq.b	#2,(Special_V_int_routine).w
+
+.vscrollcopy
+		stopZ80
+		dma68kToVDP V_scroll_buffer,$0000,(320/4),VSRAM
+		startZ80
+		rts
+
+; ---------------------------------------------------------------------------
+; Horizontal interrupt (Water)
 ; ---------------------------------------------------------------------------
 
 ; =============== S U B R O U T I N E =======================================

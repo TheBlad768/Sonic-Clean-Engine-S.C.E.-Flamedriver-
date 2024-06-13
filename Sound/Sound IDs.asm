@@ -10,7 +10,7 @@ mus_Stop				ds.b 1		; $E2 - stop music and sound effects
 mus_MutePSG			ds.b 1		; $E3 - mute all PSG channels
 mus_StopSFX			ds.b 1		; $E4 - stop all sound effects
 mus_FadeOut2			ds.b 1		; $E5 - fade out music (duplicate)
-Mus__EndCmd =			*			; next ID after last sound command
+mus__EndCmd =			*			; next ID after last sound command
 
 mus_FA =				$FA			; $FA - ???
 mus_StopSEGA =			$FE			; $FE - Stop SEGA sound

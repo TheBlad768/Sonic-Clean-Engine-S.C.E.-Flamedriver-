@@ -6,8 +6,8 @@
 ; =============== S U B R O U T I N E =======================================
 
 SndDrvInit:
-		SMPS_stopZ80a			; stop the Z80
-		SMPS_resetZ80			; release Z80 reset
+		SMPS_stopZ80a						; stop the Z80
+		SMPS_resetZ80						; release Z80 reset
 
 		; load SMPS sound driver
 		lea	(z80_SoundDriver).l,a0
@@ -17,24 +17,23 @@ SndDrvInit:
 		; load default variables
 		moveq	#0,d1
 		lea	(Z80_RAM+z80_stack).l,a1
-		move.w	#bytesToXcnt(zTracksStart-z80_stack, 8),d0
+		moveq	#bytesToXcnt(zTracksStart-z80_stack,8),d0
 
--		movep.l	d1,0(a1)
+.copy
+		movep.l	d1,0(a1)
 		movep.l	d1,1(a1)
-		addq.w	#8,a1
-		dbf	d0,-
+		addq.w	#8,a1						; next bytes
+		dbf	d0,.copy
 
 		; detect PAL region consoles
-		btst	#6,(Graphics_flags).w
-		beq.s	.notpal
+		btst	#0,(VDP_control_port+1).l
+		beq.s	.notpal						; branch if it's not a PAL system
 		move.b	#1,(Z80_RAM+zPalFlag).l
 
 .notpal
-		SMPS_resetZ80a		; reset Z80
-	rept 4
-		nop
-	endr
-		SMPS_resetZ80		; release reset
+		SMPS_resetZ80a						; reset Z80
+		nops 4								; wait 16 cycles
+		SMPS_resetZ80						; release reset
 		SMPS_startZ80
 		rts
 

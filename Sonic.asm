@@ -1,5 +1,5 @@
 ; ===========================================================================
-; Sonic: TEST GAME
+; Sonic Clean Engine (SCE)
 ; ===========================================================================
 
 ; Assembly options
@@ -9,7 +9,6 @@ GameDebugAlt:			= 0	; if 1, enable alt debug mode for Sonic
 Lagometer:				= 1	; if 1, enable debug lagometer
 ExtendedCamera:			= 0	; if 1, enable extended camera
 RollInAir:				= 1	; if 1, enable roll in air for Sonic
-OptimiseSound:			= 1	; change to 1 to optimise sound queuing
 OptimiseStopZ80:			= 2	; if 1, remove stopZ80 and startZ80, if 2, use only for controllers(ignores sound driver)
 ZeroOffsetOptimization:	= 1	; if 1, makes a handful of zero-offset instructions smaller
 AllOptimizations:			= 1	; if 1, enables all optimizations
@@ -75,12 +74,6 @@ CartRAMEndLoc:	dc.l $20202020	; SRAM end ($20xxxx)
 Modem_Info:		dc.b "                                                    "
 Country_Code:	dc.b "JUE             "
 EndOfHeader:
-
-; ---------------------------------------------------------------------------
-; Security Subroutine
-; ---------------------------------------------------------------------------
-
-		include "Data/Misc/Security Startup.asm"
 
 ; ---------------------------------------------------------------------------
 ; VDP Subroutine
@@ -185,7 +178,7 @@ EndOfHeader:
 ; Load HUD Subroutine
 ; ---------------------------------------------------------------------------
 
-		include "Data/Misc/Load HUD.asm"
+		include "Objects/HUD/Load HUD.asm"
 
 ; ---------------------------------------------------------------------------
 ; Load Rings Subroutine
@@ -311,12 +304,6 @@ EndOfHeader:
 		include "Pointers/Objects Data.asm"
 
 ; ---------------------------------------------------------------------------
-; AfterBoss Cleanup Subroutine
-; ---------------------------------------------------------------------------
-
-		include "Data/Misc/AfterBoss Cleanup.asm"
-
-; ---------------------------------------------------------------------------
 ; Level Select screen subroutines
 ; ---------------------------------------------------------------------------
 
@@ -328,13 +315,8 @@ EndOfHeader:
 
 		include "Data/Screens/Level/Level.asm"
 
-; ---------------------------------------------------------------------------
-; Pattern Load Cues pointers
-; ---------------------------------------------------------------------------
-
-		include "Pointers/Pattern Load Cues.asm"
-
 	if GameDebug
+
 ; ---------------------------------------------------------------------------
 ; Debug Mode Subroutine
 ; ---------------------------------------------------------------------------
@@ -343,20 +325,23 @@ EndOfHeader:
 			include "Objects/Sonic/Debug Mode(Crackers).asm"
 		else
 			include "Objects/Sonic/Debug Mode.asm"
+			include "Pointers/Debug Pointers.asm"
 		endif
 
 	endif
 
 ; ---------------------------------------------------------------------------
-; Object Pointers
+; Security Subroutine
 ; ---------------------------------------------------------------------------
 
-		include "Pointers/Object Pointers.asm"
+		include "Data/Misc/Security Startup 1.asm"
+		include "Data/Misc/Security Startup 2.asm"
 
 ; ---------------------------------------------------------------------------
-; Subroutine to load Sonic object data
+; Subroutine to load player object data
 ; ---------------------------------------------------------------------------
 
+		; Sonic
 		include "Objects/Sonic/Object Data/Anim - Sonic.asm"
 		include "Objects/Sonic/Object Data/Map - Sonic.asm"
 		include "Objects/Sonic/Object Data/Sonic pattern load cues.asm"
@@ -379,6 +364,18 @@ EndOfHeader:
 
 		include "Pointers/Palette Pointers.asm"
 		include "Pointers/Palette Data.asm"
+
+; ---------------------------------------------------------------------------
+; Object Pointers
+; ---------------------------------------------------------------------------
+
+		include "Pointers/Object Pointers.asm"
+
+; ---------------------------------------------------------------------------
+; Pattern Load Cues pointers
+; ---------------------------------------------------------------------------
+
+		include "Pointers/Pattern Load Cues.asm"
 
 ; ---------------------------------------------------------------------------
 ; Kosinski Module compressed graphics pointers
