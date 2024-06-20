@@ -5,7 +5,7 @@
 ; RAM variables - General
 	phase	ramaddr($FFFF0000)								; pretend we're in the RAM
 RAM_start:							= *
-Chunk_table:							ds.b $8000				; chunk (128x128) definitions, $80 bytes per definition
+Chunk_table:							ds.b $100*$80			; chunk (128x128) definitions, $80 bytes per definition
 Chunk_table_end						= *
 
 ; object variables
@@ -143,9 +143,6 @@ Camera_RAM_end					= *
 ; plane variables
 Plane_buffer:							ds.w $240				; used by level drawing routines
 Plane_buffer_end
-
-; sound variables
-v_snddriver_ram:						ds.b $400				; start of RAM for the sound driver data
 
 ; misc variables
 v_gamemode:						= *
