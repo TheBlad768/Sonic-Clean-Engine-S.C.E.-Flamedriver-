@@ -144,6 +144,9 @@ Camera_RAM_end					= *
 Plane_buffer:							ds.w $240				; used by level drawing routines
 Plane_buffer_end
 
+; sound variables
+v_snddriver_ram:						ds.b $400				; start of RAM for the sound driver data
+
 ; misc variables
 v_gamemode:						= *
 Game_mode:							ds.b 1
@@ -344,28 +347,28 @@ Kos_module_queue_end				= *
 ; palette variables
 v_pal_water_dup:						= *
 Target_water_palette:					= *						; used by palette fading routines
-Target_water_palette_line_1:			ds.w 16
-Target_water_palette_line_2:			ds.w 16
-Target_water_palette_line_3:			ds.w 16
-Target_water_palette_line_4:			ds.w 16
+Target_water_palette_line_1:			ds.b palette_line_size
+Target_water_palette_line_2:			ds.b palette_line_size
+Target_water_palette_line_3:			ds.b palette_line_size
+Target_water_palette_line_4:			ds.b palette_line_size
 v_pal_water:							= *
 Water_palette:						= *						; this is what actually gets displayed
-Water_palette_line_1:					ds.w 16
-Water_palette_line_2:					ds.w 16
-Water_palette_line_3:					ds.w 16
-Water_palette_line_4:					ds.w 16
+Water_palette_line_1:					ds.b palette_line_size
+Water_palette_line_2:					ds.b palette_line_size
+Water_palette_line_3:					ds.b palette_line_size
+Water_palette_line_4:					ds.b palette_line_size
 v_pal_dry:							= *
 Normal_palette:						= *						; this is what actually gets displayed
-Normal_palette_line_1:				ds.w 16
-Normal_palette_line_2:				ds.w 16
-Normal_palette_line_3:				ds.w 16
-Normal_palette_line_4:				ds.w 16
+Normal_palette_line_1:				ds.b palette_line_size
+Normal_palette_line_2:				ds.b palette_line_size
+Normal_palette_line_3:				ds.b palette_line_size
+Normal_palette_line_4:				ds.b palette_line_size
 v_pal_dry_dup:						= *
 Target_palette:						= *						; used by palette fading routines
-Target_palette_line_1:					ds.w 16
-Target_palette_line_2:					ds.w 16
-Target_palette_line_3:					ds.w 16
-Target_palette_line_4:					ds.w 16
+Target_palette_line_1:					ds.b palette_line_size
+Target_palette_line_2:					ds.b palette_line_size
+Target_palette_line_3:					ds.b palette_line_size
+Target_palette_line_4:					ds.b palette_line_size
 
 ; oscillating variables
 Oscillating_variables:					= *
@@ -413,8 +416,10 @@ Last_star_post_hit:					= *
 Last_star_pole_hit:					ds.b 1
 Current_music:						ds.w 1
 Palette_fade_timer:					ds.w 1					; the palette gets faded in until this timer expires
+SegaCD_Mode:						ds.b 1
 Respawn_table_keep:					ds.b 1					; if set, respawn table is not reset during level load
 Debug_mode_flag:					ds.b 1
+									ds.b 1					; even
 
 ; HUD data variables
 f_timeover:							= *
